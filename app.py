@@ -13,6 +13,33 @@ def index():
     return render_template( "index.html")
     #should b added here loginhtml
 
+@app.route("/new_item")
+def new_item():
+    return render_template( "new_item.html")
+
+@app.route("/create_item", methods=["POST"])
+def create_item():
+    title = request.form["title"]
+    training_type= request.form["training_type"]
+    specialization= request.form["specialization"]
+    format= request.form["format"]
+    training_level= request.form["training_level"]
+    coach= request.form["coach"]
+    training_date= request.form["training_date"]
+    training_time= request.form["training_time"]
+    training_description=request.form["training_description"]
+    user_id=session["user_id"]
+
+    sql = """INSERT INTO items
+    (title, training_type, specialization, format, training_level, coach, training_date, training_time, training_description, user_id)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"""
+
+    db.execute(sql, [
+        title, training_type, specialization, format,
+        training_level, coach, training_date, training_time,
+        training_description, user_id
+    ])
+
 
 @app.route("/register")
 def register():
@@ -48,14 +75,19 @@ def login():
         username = request.form["username"]
         password = request.form["password"]
 
-        sql = "SELECT password_hash FROM users WHERE username = ?"
-        password_hash = db.query(sql, [username])[0][0]
+        sql = "SELECT id, password_hash FROM users WHERE username = ?"
+        result = db.query(sql, [username])[0]
+        # result looks like {id": 1, "password_hash": "hashed_password_here"}
+        user_id=result["id"]
+        password_hash=result["password_hash"]
+        #password_hash=db.query(sql, [username])[0][0]
         #executes SELECT password_hash FROM users WHERE username = ?
         #The ? is replaced safely with username
         #[("pbkdf2:sha256:600000$abc123$xyz...",)]
         #A database query always returns: a list of rows
         #each row is a tuple of column
         if check_password_hash(password_hash, password):
+            session["user_id"]=user_id
             session["username"] = username
             return redirect("/")
         #redirecting to the main page afer login
@@ -65,4 +97,5 @@ def login():
 @app.route("/logout")
 def logout():
     del session["username"]
+    del session["user_id"]
     return redirect("/")

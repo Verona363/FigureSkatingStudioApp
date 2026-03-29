@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>New training session</title>
+</head>
+
+<body>
+    <h1>Add a new training session</h1>
+  <form action="/create_item" method="post">
+    <p>
+      Title: <br />  
+      <input type="text" name="title" />
+    </p>
+    <p>
+      Training type (off-ice/on-ice): <br />  
+      <input type="text" name="training_type" />
+    </p>
+    <p>
+      Specialization  <br />  
+      (jumps/spins/stretching/etc): <br />
+      <input type="text" name="specialization" />
+    </p>
+    <p>
+      Format (group/individual): <br />  
+      <input type="text" name="format" />
+    </p>
+    <p>
+      Level: <br />
+      <input type="text" name="training_level" />
+    </p>
+    <p>
+      Coach: <br />
+      <input type="text" name="coach" />
+    </p>
+    <p>
+      Date: <br />
+      <input type="date" name="training_date" />
+    </p>
+    <p>
+      Time: <br />
+      <input type="time" name="training_time" />
+    </p>
+    <p>
+      Description: <br />
+      <textarea name="training_description" rows="8" cols="80"></textarea>
+    </p>
+    <input type="submit" value="Add new session" />
+  </form>
+</body>
+
+</html>
