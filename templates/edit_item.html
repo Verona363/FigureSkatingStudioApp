@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Edit training session</title>
+</head>
+
+<body>
+    <h1>Edit training session</h1>
+  <form action="/update_item" method="post">
+    <p>
+      Title: <br />  
+      <input type="text" name="title" value="{{ item.title}}"/>
+    </p>
+    <p>
+      Training type (off-ice/on-ice): <br />  
+      <input type="text" name="training_type" value="{{item.training_type}}" />
+    </p>
+    <p>
+      Specialization  <br />  
+      (jumps/spins/stretching/etc): <br />
+      <input type="text" name="specialization" value="{{item.specialization}}" />
+    </p>
+    <p>
+      Format (group/individual): <br />  
+      <input type="text" name="format" value="{{item.format}}" />
+    </p>
+    <p>
+      Level: <br />
+      <input type="text" name="training_level" value="{{item.training_level}}" />
+    </p>
+    <p>
+      Coach: <br />
+      <input type="text" name="coach" value="{{item.coach}}" />
+    </p>
+    <p>
+      Date: <br />
+      <input type="date" name="training_date" value="{{item.training_date}}"/>
+    </p>
+    <p>
+      Time: <br />
+      <input type="time" name="training_time" value="{{item.training_time}}"/>
+    </p>
+    <p>
+      Description: <br />
+      <textarea name="training_description" rows="8" cols="80">{{item.training_description}}</textarea>
+    </p>
+    <input type="hidden" name = "item_id" value="{{item.id}}" /> <!--adding hidden item_id to pass it to the function-->
+    <input type="submit" value="Edit session" />
+  </form>
+</body>
+
+</html>

@@ -40,6 +40,27 @@ def create_item():
     items.add_item(title, training_type, specialization, format, training_level, coach, training_date, training_time, training_description, user_id)
     return redirect("/")
 
+@app.route("/edit_item/<int:item_id>")
+def edit_item(item_id):
+    item=items.get_item(item_id)
+    return render_template( "edit_item.html", item=item)
+
+
+@app.route("/update_item", methods=["POST"])
+def update_item():
+    item_id = request.form["item_id"] #something what is different from create item function
+    #requesting item id from html edit_item
+    title = request.form["title"]
+    training_type= request.form["training_type"]
+    specialization= request.form["specialization"]
+    format= request.form["format"]
+    training_level= request.form["training_level"]
+    coach= request.form["coach"]
+    training_date= request.form["training_date"]
+    training_time= request.form["training_time"]
+    training_description=request.form["training_description"]
+    items.update_item(item_id, title, training_type, specialization, format, training_level, coach, training_date, training_time, training_description)
+    return redirect("/item/"+str(item_id))
 
 @app.route("/register")
 def register():
@@ -61,6 +82,7 @@ def create():
         return "ERROR: id is already taken"
 
     return "Account created"
+    #Add a button back to the main later on!!
     #no redirecting
 
 @app.route("/login", methods=[ "GET", "POST"])
