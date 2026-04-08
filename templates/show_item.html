@@ -10,7 +10,10 @@
     {% if session.user_id == item.user_id %}
   <p>
     <a href="/edit_item/{{ item.id }}" >Edit</a>
+    <a href="/remove_item/{{ item.id }}" >Delete</a>
   </p>
+  <!-- <a> --The browser sends a GET request--it simply navigates to another page -->
+    <!-- <a> --no form needed <form> is used to send data--method POST -->
   {% endif %}
     <p>
         Type: {{item.training_type}}

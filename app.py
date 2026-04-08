@@ -59,8 +59,29 @@ def update_item():
     training_date= request.form["training_date"]
     training_time= request.form["training_time"]
     training_description=request.form["training_description"]
+
     items.update_item(item_id, title, training_type, specialization, format, training_level, coach, training_date, training_time, training_description)
+    
     return redirect("/item/"+str(item_id))
+
+@app.route("/remove_item/<int:item_id>", methods=["GET", "POST"])
+def remove_item(item_id):
+    if request.method == "GET":
+        item=items.get_item(item_id)
+        return render_template( "remove_item.html", item=item)
+    if request.method == "POST":
+        if "remove" in request.form:
+    #If we press remove, then it does the following:
+            items.remove_item(item_id)
+            return redirect("/")
+    #Remove is the name="remove" of the button
+    #under method post in the html file 
+    #remove_item.html
+        else:
+            return redirect("/item/"+ str(item_id))
+        
+
+
 
 @app.route("/register")
 def register():

@@ -46,3 +46,13 @@ def update_item(item_id, title, training_type, specialization, format, training_
     db.execute(sql, [title, training_type, specialization, format,
         training_level, coach, training_date, training_time,
         training_description, item_id])
+    #The db.execute function runs the query and replaces the ? placeholders
+    # with the actual values passed in the list.
+    #The last value in the list is item_id, which tells the database which record to update.
+
+    #The order of the values in the list for "db.execute "" must match the order of the ? placeholders in the SQL query exactly.
+    #There is 1 ? placeholder in the WHERE clause → for the item_id.
+
+def remove_item(item_id):
+    sql = "DELETE FROM items where id = ?"
+    db.execute(sql, [item_id])
