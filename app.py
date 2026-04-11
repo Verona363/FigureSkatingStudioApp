@@ -15,6 +15,25 @@ def index():
     return render_template( "index.html", items=all_items)
     #should b added here loginhtml
 
+@app.route("/find_item")
+def find_item():
+    query=request.args.get("query")
+    #"query" matches the HTML input name="query"
+    if query:
+        results= items.find_items(query)
+    #it returns from database
+    #results = [
+    #{"id": 1, "title": "Python Basics"},
+    #{"id": 2, "title": "Advanced Python"}]
+
+    else:
+        query=""
+        results=[]
+    return render_template( "find_item.html", query=query, results=results)
+    #for this part query=qury (1st is what html sees as a variable,
+    #2ND is our python code variable name)
+    #html_template_variable = python_variable
+
 @app.route("/item/<int:item_id>")
 def show_item(item_id):
     item = items.get_item(item_id)
@@ -75,13 +94,10 @@ def remove_item(item_id):
             items.remove_item(item_id)
             return redirect("/")
     #Remove is the name="remove" of the button
-    #under method post in the html file 
+    #under method post in the html file
     #remove_item.html
         else:
             return redirect("/item/"+ str(item_id))
-        
-
-
 
 @app.route("/register")
 def register():

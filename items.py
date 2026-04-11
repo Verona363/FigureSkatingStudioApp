@@ -52,7 +52,33 @@ def update_item(item_id, title, training_type, specialization, format, training_
 
     #The order of the values in the list for "db.execute "" must match the order of the ? placeholders in the SQL query exactly.
     #There is 1 ? placeholder in the WHERE clause → for the item_id.
-
+    
 def remove_item(item_id):
     sql = "DELETE FROM items where id = ?"
     db.execute(sql, [item_id])
+
+def find_items(query):
+    sql = """
+    SELECT id, title
+    FROM items
+    WHERE 
+        title LIKE ? OR
+        training_type LIKE ? OR
+        specialization LIKE ? OR
+        format LIKE ? OR
+        training_level LIKE ? OR
+        coach LIKE ? OR
+        training_date LIKE ? OR
+        training_time LIKE ? OR
+        training_description LIKE ?
+    ORDER BY id DESC
+    """
+
+    like = "%" + query + "%"
+    #SQL LIKE needs wildcards (%), and query alone does NOT have them.
+    #without % title LIKE 'python"---This only matches exactly "python"
+    #% % allow to search anywhere in the text
+
+    return db.query(sql, [like] * 9)
+    # It creates a list that repeats the same value 9 times.
+    #like=jumps
