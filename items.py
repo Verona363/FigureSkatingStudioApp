@@ -31,6 +31,25 @@ def get_item(item_id):
     WHERE items.user_id=users.id AND
     items.id=?"""
     return db.query(sql, [item_id]) [0]
+    #db.query() returns a list of dictionaries, where:
+    #List = all rows returned by the SQL query
+    #Dictionary = one row (column → value)
+    #[row1_dict,
+    #row2_dict,
+    #row3_dict]
+    #results = db.query(sql, [item_id]) might return
+#    [
+#   {
+#        "id": 1,
+#        "title": "Python Basics",
+#        "username": "johndoe"
+#    }
+#]
+#What [0] does: give me first row from the result list
+#{ "id": 1, "title": "Python Basics" }
+
+
+
 
 def update_item(item_id, title, training_type, specialization, format, training_level, coach, training_date, training_time, training_description):
     sql = """UPDATE items SET title=?,
