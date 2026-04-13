@@ -30,7 +30,9 @@ def get_item(item_id):
     FROM items, users
     WHERE items.user_id=users.id AND
     items.id=?"""
-    return db.query(sql, [item_id]) [0]
+    result= db.query(sql, [item_id])
+    return result[0] if result else None
+    
     #db.query() returns a list of dictionaries, where:
     #List = all rows returned by the SQL query
     #Dictionary = one row (column → value)
