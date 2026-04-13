@@ -10,11 +10,11 @@
   <form action="/create_item" method="post">
     <p>
       Title: <br />  
-      <input type="text" name="title" />
+      <input type="text" name="title" maxlength="80" required/>
     </p>
     <p>
       Training type (off-ice/on-ice): <br />  
-      <input type="text" name="training_type" />
+      <input type="text" name="training_type" required />
     </p>
     <p>
       Specialization  <br />  
@@ -23,7 +23,7 @@
     </p>
     <p>
       Format (group/individual): <br />  
-      <input type="text" name="format" />
+      <input type="text" name="format" required />
     </p>
     <p>
       Level: <br />
@@ -31,19 +31,19 @@
     </p>
     <p>
       Coach: <br />
-      <input type="text" name="coach" />
+      <input type="text" name="coach" required />
     </p>
     <p>
       Date: <br />
-      <input type="date" name="training_date" />
+      <input type="date" name="training_date" required />
     </p>
     <p>
       Time: <br />
-      <input type="time" name="training_time" />
+      <input type="time" name="training_time" required />
     </p>
     <p>
       Description: <br />
-      <textarea name="training_description" rows="8" cols="80"></textarea>
+      <textarea name="training_description" rows="8" cols="80" maxlength="1000"></textarea>
     </p>
     <input type="submit" value="Add new session" />
   </form>

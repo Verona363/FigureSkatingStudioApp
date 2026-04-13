@@ -56,14 +56,28 @@ def new_item():
 def create_item():
     require_login()
     title = request.form["title"]
+    if not title or len(title)>80:
+        abort(403)
     training_type= request.form["training_type"]
+    if not training_type:
+        abort(403)
     specialization= request.form["specialization"]
     format= request.form["format"]
+    if not format:
+        abort(403)
     training_level= request.form["training_level"]
     coach= request.form["coach"]
+    if not coach:
+        abort(403)
     training_date= request.form["training_date"]
+    if not training_date:
+        abort(403)
     training_time= request.form["training_time"]
+    if not training_time:
+        abort(403)
     training_description=request.form["training_description"]
+    if len(training_description)>1000:
+        abort(403)
     user_id=session["user_id"]
 
     items.add_item(title, training_type, specialization, format, training_level, coach, training_date, training_time, training_description, user_id)
