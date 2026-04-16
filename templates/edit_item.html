@@ -10,11 +10,11 @@
   <form action="/update_item" method="post">
     <p>
       Title: <br />  
-      <input type="text" name="title" value="{{ item.title}}"/>
+      <input type="text" name="title" value="{{ item.title}}" maxlength="80" required/>
     </p>
     <p>
       Training type (off-ice/on-ice): <br />  
-      <input type="text" name="training_type" value="{{item.training_type}}" />
+      <input type="text" name="training_type" value="{{item.training_type}}" required/>
     </p>
     <p>
       Specialization  <br />  
@@ -23,7 +23,7 @@
     </p>
     <p>
       Format (group/individual): <br />  
-      <input type="text" name="format" value="{{item.format}}" />
+      <input type="text" name="format" value="{{item.format}}" required/>
     </p>
     <p>
       Level: <br />
@@ -31,22 +31,24 @@
     </p>
     <p>
       Coach: <br />
-      <input type="text" name="coach" value="{{item.coach}}" />
+      <input type="text" name="coach" value="{{item.coach}}" required/>
     </p>
     <p>
       Date: <br />
-      <input type="date" name="training_date" value="{{item.training_date}}"/>
+      <input type="date" name="training_date" value="{{item.training_date}}" required/>
     </p>
     <p>
       Time: <br />
-      <input type="time" name="training_time" value="{{item.training_time}}"/>
+      <input type="time" name="training_time" value="{{item.training_time}}" required/>
     </p>
     <p>
       Description: <br />
-      <textarea name="training_description" rows="8" cols="80">{{item.training_description}}</textarea>
+      <textarea name="training_description" rows="8" cols="80" maxlength="1000">{{item.training_description}} </textarea>
     </p>
-    <input type="hidden" name = "item_id" value="{{item.id}}" /> <!--adding hidden item_id to pass it to the function-->
+    
+    <input type="hidden" name = "item_id" value="{{item.id}}"/> <!--adding hidden item_id to pass it to the function-->
     <input type="submit" value="Edit session" />
+      
   </form>
 </body>
 
