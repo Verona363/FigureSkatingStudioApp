@@ -31,7 +31,11 @@
     </p>
     <p>
       Coach: <br />
-      <input type="text" name="coach" required />
+      <select name="coach_id">
+        {% for coach in coaches %}
+        <option value="{{ coach.id}}">{{ coach.username}} </option>
+        {% endfor %}
+      </select>
     </p>
     <p>
       Date: <br />

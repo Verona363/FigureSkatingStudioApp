@@ -5,7 +5,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 import db
 import config
 import items
-
+import users
 app = Flask(__name__)
 app.secret_key = config.secret_key
 
@@ -13,13 +13,20 @@ def require_login():
     if "user_id" not in session:
         abort(403)
 
-
-
 @app.route("/")
 def index():
     all_items = items.get_items()
     return render_template( "index.html", items=all_items)
     #should b added here loginhtml
+
+@app.route("/user/<int:user_id>")
+def show_user(user_id):
+    user = users.get_user(user_id)
+    if not user:
+        abort(404)
+    items=users.get_items(user_id)
+    return render_template("show_user.html", user=user, items=items)
+
 
 @app.route("/find_item")
 def find_item():
@@ -50,7 +57,8 @@ def show_item(item_id):
 @app.route("/new_item")
 def new_item():
     require_login()
-    return render_template( "new_item.html")
+    coaches=users.get_all_users()
+    return render_template( "new_item.html", coaches=coaches)
 
 @app.route("/create_item", methods=["POST"])
 def create_item():
@@ -66,7 +74,8 @@ def create_item():
     if not format:
         abort(403)
     training_level= request.form["training_level"]
-    coach= request.form["coach"]
+    coach_id= int(request.form["coach_id"])
+    coach=users.get_user(coach_id)
     if not coach:
         abort(403)
     training_date= request.form["training_date"]
@@ -80,18 +89,20 @@ def create_item():
         abort(403)
     user_id=session["user_id"]
 
-    items.add_item(title, training_type, specialization, format, training_level, coach, training_date, training_time, training_description, user_id)
+    items.add_item(title, training_type, specialization, format, training_level, coach_id, training_date, training_time, training_description, user_id)
     return redirect("/")
 
 @app.route("/edit_item/<int:item_id>")
 def edit_item(item_id):
     require_login()
     item=items.get_item(item_id)
-    if item["user_id"] != session["user_id"]:
+    if item["user_id"] != session["user_id"] and item["coach_id"] != session["user_id"]:
         abort(403)
     if not item:
         abort(404)
-    return render_template( "edit_item.html", item=item)
+    
+    coaches = users.get_all_users()
+    return render_template( "edit_item.html", item=item, coaches=coaches)
 
 
 @app.route("/update_item", methods=["POST"])
@@ -102,7 +113,7 @@ def update_item():
     item=items.get_item(item_id)
     if not item:
         abort(404)
-    if item["user_id"]!=session["user_id"]:
+    if item["user_id"] != session["user_id"] and item["coach_id"] != session["user_id"]:
         abort(403)
     title = request.form["title"]
     if not title or len(title)>80:
@@ -115,7 +126,8 @@ def update_item():
     if not format:
         abort(403)
     training_level= request.form["training_level"]
-    coach= request.form["coach"]
+    coach_id= int(request.form["coach_id"])
+    coach=users.get_user(coach_id)
     if not coach:
         abort(403)
     training_date= request.form["training_date"]
@@ -128,7 +140,7 @@ def update_item():
     if len(training_description)>1000:
         abort(403)
 
-    items.update_item(item_id, title, training_type, specialization, format, training_level, coach, training_date, training_time, training_description)
+    items.update_item(item_id, title, training_type, specialization, format, training_level, coach_id, training_date, training_time, training_description)
     
     return redirect("/item/"+str(item_id))
 
@@ -138,7 +150,7 @@ def remove_item(item_id):
     item=items.get_item(item_id)
     if not item:
         abort(404)
-    if item["user_id"] != session["user_id"]:
+    if item["user_id"] != session["user_id"] and item["coach_id"] != session["user_id"]:
         abort(403)
         
     if request.method == "GET":

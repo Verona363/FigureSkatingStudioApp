@@ -7,7 +7,7 @@
 
 <body>
     <h1>{{ item.title }}</h1>
-    {% if session.user_id == item.user_id %}
+    {% if session.user_id == item.user_id or session.user_id == item.coach_id %}
   <p>
     <a href="/edit_item/{{ item.id }}" >Edit</a>
     <a href="/remove_item/{{ item.id }}" >Delete</a>
@@ -28,7 +28,7 @@
         Level: {{item.training_level}}
     </p>
     <p>
-        Coach: {{item.coach}}
+        Coach: <a href="/user/{{ item.coach_id }}" >{{item.coach_name}}</a>
     </p>
     <p>
         Date: {{item.training_date}}

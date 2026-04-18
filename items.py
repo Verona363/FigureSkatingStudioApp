@@ -1,11 +1,11 @@
 import db
-def add_item(title, training_type, specialization, format, training_level, coach, training_date, training_time, training_description, user_id):
+def add_item(title, training_type, specialization, format, training_level, coach_id, training_date, training_time, training_description, user_id):
     sql = """INSERT INTO items
-    (title, training_type, specialization, format, training_level, coach, training_date, training_time, training_description, user_id)
+    (title, training_type, specialization, format, training_level, coach_id, training_date, training_time, training_description, user_id)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"""
     db.execute(sql, [
         title, training_type, specialization, format,
-        training_level, coach, training_date, training_time,
+        training_level, coach_id, training_date, training_time,
         training_description, user_id
     ])
 
@@ -13,26 +13,54 @@ def get_items():
     sql = "SELECT id, title FROM items ORDER BY id DESC"
     return db.query(sql)
 
+
+#new function
 def get_item(item_id):
-    sql = """SELECT items.id,
+    sql = """ SELECT items.id,
     items.title,
     items.training_type,
     items.specialization,
     items.format,
     items.training_level,
-    items.coach,
     items.training_date,
     items.training_time,
     items.training_description,
-    users.id user_id,
-    users.username
 
-    FROM items, users
-    WHERE items.user_id=users.id AND
-    items.id=?"""
+    creator.id AS user_id,
+    creator.username AS creator_name,
+
+
+    coach.id AS coach_id,
+    coach.username AS coach_name
+
+    FROM items
+    JOIN users AS creator ON items.user_id= creator.id
+    JOIN users AS coach ON items.coach_id = coach.id
+    WHERE items.id=? """
     result= db.query(sql, [item_id])
     return result[0] if result else None
-    
+#Explanation about roles, same table "users" used twice
+#    creator.id AS user_id,
+#    creator.username AS creator_name,
+
+    #  later I'm joining users as creator,
+    #  so creator.id originally was users.id
+    #  creator.username originally was users.username
+
+
+# example result from this query is
+#{
+#  "id": 10,
+#  "title": "Spins",
+#
+#  "user_id": 1,
+#  "creator_name": "main_coach",
+#
+#  "coach_id": 2,
+#  "coach_name": "anna"
+#}
+
+   
     #db.query() returns a list of dictionaries, where:
     #List = all rows returned by the SQL query
     #Dictionary = one row (column → value)
@@ -45,7 +73,7 @@ def get_item(item_id):
 #        "id": 1,
 #        "title": "Python Basics",
 #        "username": "johndoe"
-#    }
+#    } 
 #]
 #What [0] does: give me first row from the result list
 #{ "id": 1, "title": "Python Basics" }
@@ -53,19 +81,19 @@ def get_item(item_id):
 
 
 
-def update_item(item_id, title, training_type, specialization, format, training_level, coach, training_date, training_time, training_description):
+def update_item(item_id, title, training_type, specialization, format, training_level, coach_id, training_date, training_time, training_description):
     sql = """UPDATE items SET title=?,
                         training_type=?,
                         specialization=?,
                         format=?,
                         training_level=?,
-                        coach=?,
+                        coach_id=?,
                         training_date=?,
                         training_time=?,
                         training_description=?
                         where id = ?"""
     db.execute(sql, [title, training_type, specialization, format,
-        training_level, coach, training_date, training_time,
+        training_level, coach_id, training_date, training_time,
         training_description, item_id])
     #The db.execute function runs the query and replaces the ? placeholders
     # with the actual values passed in the list.
@@ -88,7 +116,7 @@ def find_items(query):
         specialization LIKE ? OR
         format LIKE ? OR
         training_level LIKE ? OR
-        coach LIKE ? OR
+        coach_id LIKE ? OR
         training_date LIKE ? OR
         training_time LIKE ? OR
         training_description LIKE ?
@@ -103,3 +131,4 @@ def find_items(query):
     return db.query(sql, [like] * 9)
     # It creates a list that repeats the same value 9 times.
     #like=jumps
+

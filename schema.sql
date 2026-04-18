@@ -11,7 +11,7 @@ CREATE TABLE items(
     specialization TEXT,
     format TEXT,
     training_level TEXT,
-    coach TEXT,
+    coach_id INTEGER REFERENCES users,
     training_date TEXT,
     training_time TEXT,
     training_description TEXT,
