@@ -39,18 +39,31 @@ The primary data item in the system is the training notification. The secondary 
 Follow these steps to run the app locally on your computer.
 
 1. Clone the repository
-- git clone <my-repo-url>
-- cd <my-project-folder>
-3. Create a virtual environment
-- python -m venv venv
-4. Activate it
-- source venv/bin/activate
-5. Install dependencies
-- pip install flask
-- pip install -r requirements.txt
+```bash
+git clone https://github.com/Verona363/FigureSkatingStudioApp
+cd FigureSkatingStudioApp
+```
+2. Create a virtual environment
+```bash
+python -m venv venv
+```
+3. Activate it
+```bash
+source venv/bin/activate
+```
+4. Install dependencies
+```bash
+pip install flask
+```
 6. Set up the database
-- sqlite3 database.db < schema.sql
+```bash
+sqlite3 database.db < schema.sql
+```
 7. Run the flask app
-- flask run
+```bash
+flask run
+```
 5. Go to
-- http://127.0.0.1:5000
+```bash
+http://127.0.0.1:5000
+```
