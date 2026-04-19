@@ -13,7 +13,13 @@
     <h2> Announcements </h2>
     <ul> 
         {% for item in items %}
-        <li><a href="/item/{{ item.id }}">{{item.title}}</a></li>
+        <li><a href="/item/{{ item.id }}">{{item.title}}</a>
+
+        {% if item.training_level %}
+            <p>(Level: {{ item.training_level }})</p>
+        {% endif %}
+
+        </li>
         {% endfor %}
     </ul>
     <p>

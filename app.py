@@ -1,7 +1,6 @@
 import sqlite3
 from flask import Flask
 from flask import abort, redirect, render_template, request, session
-from werkzeug.security import check_password_hash, generate_password_hash
 import db
 import config
 import items
@@ -177,16 +176,12 @@ def create():
     password2 = request.form["password2"]
     if password1 != password2:
         return "ERROR: passwords do not match"
-    password_hash = generate_password_hash(password1)
-
     try:
-        sql = "INSERT INTO users (username, password_hash) VALUES (?, ?)"
-        db.execute(sql, [username, password_hash])
+        users.create_user(username, password1)
     except sqlite3.IntegrityError:
         return "ERROR: id is already taken"
-
     return "Account created"
-    #Add a button back to the main later on!!
+    #Later add a button back to the main later on!!
     #no redirecting
 
 @app.route("/login", methods=[ "GET", "POST"])
@@ -200,19 +195,14 @@ def login():
     #if user able to login directs him to the main page
         username = request.form["username"]
         password = request.form["password"]
-
-        sql = "SELECT id, password_hash FROM users WHERE username = ?"
-        result = db.query(sql, [username])[0]
-        # result looks like {id": 1, "password_hash": "hashed_password_here"}
-        user_id=result["id"]
-        password_hash=result["password_hash"]
+        user_id=users.check_login(username, password)
         #password_hash=db.query(sql, [username])[0][0]
         #executes SELECT password_hash FROM users WHERE username = ?
         #The ? is replaced safely with username
         #[("pbkdf2:sha256:600000$abc123$xyz...",)]
         #A database query always returns: a list of rows
         #each row is a tuple of column
-        if check_password_hash(password_hash, password):
+        if user_id:
             session["user_id"]=user_id
             session["username"] = username
             return redirect("/")
