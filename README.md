@@ -34,3 +34,23 @@ The client profile page shows:
 -Statistics on the training sessions attended by the client (e.g., number of on-ice and off-ice sessions attended, and the number of group and individual sessions attended per week, month, three months, or year).
 
 The primary data item in the system is the training notification. The secondary data item is the registration.
+
+
+Follow these steps to run the app locally on your computer.
+
+1. Clone the repository
+   git clone <my-repo-url>
+   cd <my-project-folder>
+2. Create a virtual environment
+   python -m venv venv
+3. Activate it
+   source venv/bin/activate
+4. Install dependencies
+   pip install flask
+   pip install -r requirements.txt
+6. Set up the database
+   sqlite3 database.db < schema.sql
+7. Run the flask app
+   flask run
+5. Go to
+   http://127.0.0.1:5000
