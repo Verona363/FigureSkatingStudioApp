@@ -13,21 +13,44 @@
       <input type="text" name="title" maxlength="80" required/>
     </p>
     <p>
-      Training type (off-ice/on-ice): <br />  
-      <input type="text" name="training_type" required />
+      Training type: <br />
+      <select name="training_type" required>
+        <option value="">(choose)</option>
+        <option value="off-ice">off-ice</option>
+        <option value="on-ice">on-ice</option>
+      </select>
     </p>
     <p>
-      Specialization  <br />  
-      (jumps/spins/stretching/etc): <br />
-      <input type="text" name="specialization" />
+      Specialization: <br />
+      <select name="specialization">
+        <option value="">(optional)</option>
+        <option value="jumps">jumps</option>
+        <option value="spins">spins</option>
+        <option value="gliding">gliding</option>
+        <option value="multi-modal training">multi-modal training</option>
+
+        <option value="SFP">SFP (special physical training)</option>
+        <option value="GFP">GFP (general physical training)</option>
+        <option value="stretching">stretching</option>
+        <option value="choregraphy">choreography</option>
+        </select>
     </p>
     <p>
-      Format (group/individual): <br />  
-      <input type="text" name="format" required />
+      Format (group/individual): <br /> 
+      <select name="format" required>
+        <option value="group">group</option>
+        <option value="individual">individual</option>
+        <option value="split">split</option>
+      </select>
     </p>
     <p>
       Level: <br />
-      <input type="text" name="training_level" />
+      <select name="training_level" required>
+        <option value="all levels">all levels</option>
+        <option value="beginner">beginner</option>
+        <option value="intermediate">intermediate</option>
+        <option value="advanced">advanced</option>
+      </select>
     </p>
     <p>
       Coach: <br />

@@ -18,9 +18,11 @@
     <p>
         Type: {{item.training_type}}
     </p>
+    {% if item.specialization %}
     <p>
-        Specialization: {{item.specialization}}
+        Specialization: {{ item.specialization }}
     </p>
+    {% endif %}
     <p>
         Format: {{item.format}}
     </p>
@@ -34,7 +36,7 @@
         Date: {{item.training_date}}
     </p>
     <p>
-        Format: {{item.training_time}}
+        Time: {{item.training_time}}
     </p>
     <p>
         {{item.training_description}}

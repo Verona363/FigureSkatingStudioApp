@@ -12,22 +12,55 @@
       Title: <br />  
       <input type="text" name="title" value="{{ item.title}}" maxlength="80" required/>
     </p>
-    <p>
-      Training type (off-ice/on-ice): <br />  
-      <input type="text" name="training_type" value="{{item.training_type}}" required/>
+   <p>
+      Training type: <br />
+      <select name="training_type" required>
+        <option value="">(choose)</option>
+
+        <option value="off-ice"
+          {% if item.training_type == "off-ice" %}selected{% endif %}>
+          off-ice
+        </option>
+
+      <option value="on-ice"
+        {% if item.training_type == "on-ice" %}selected{% endif %}>
+        on-ice
+      </option>
+</select>
     </p>
+
+    
     <p>
-      Specialization  <br />  
-      (jumps/spins/stretching/etc): <br />
-      <input type="text" name="specialization" value="{{item.specialization}}" />
-    </p>
+      Specialization: <br />
+  <select name="specialization">
+    <option value="">(optional)</option>
+
+    <option value="jumps" {% if item.specialization == "jumps" %}selected{% endif %}>jumps</option>
+    <option value="spins" {% if item.specialization == "spins" %}selected{% endif %}>spins</option>
+    <option value="gliding" {% if item.specialization == "gliding" %}selected{% endif %}>gliding</option>
+    <option value="multi-modal training" {% if item.specialization == "multi-modal training" %}selected{% endif %}>multi-modal training</option>
+
+    <option value="SFP" {% if item.specialization == "SFP" %}selected{% endif %}>SFP</option>
+    <option value="GFP" {% if item.specialization == "GFP" %}selected{% endif %}>GFP</option>
+    <option value="stretching" {% if item.specialization == "stretching" %}selected{% endif %}>stretching</option>
+    <option value="choregraphy" {% if item.specialization == "choregraphy" %}selected{% endif %}>choreography</option>
+</select>
+
     <p>
-      Format (group/individual): <br />  
-      <input type="text" name="format" value="{{item.format}}" required/>
-    </p>
+      Format (group/individual): <br /> 
+    <select name="format" required>
+      <option value="group" {% if item.format == "group" %}selected{% endif %}>group</option>
+      <option value="individual" {% if item.format == "individual" %}selected{% endif %}>individual</option>
+      <option value="split" {% if item.format == "split" %}selected{% endif %}>split</option>
+    </select>
     <p>
       Level: <br />
-      <input type="text" name="training_level" value="{{item.training_level}}" />
+      <select name="training_level" required>
+        <option value="all levels" {% if item.training_level == "all levels" %}selected{% endif %}>all levels</option>
+        <option value="beginner" {% if item.training_level == "beginner" %}selected{% endif %}>beginner</option>
+        <option value="intermediate" {% if item.training_level == "intermediate" %}selected{% endif %}>intermediate</option>
+        <option value="advanced" {% if item.training_level == "advanced" %}selected{% endif %}>advanced</option>
+      </select>
     </p>
     <p>
       Coach: <br />
