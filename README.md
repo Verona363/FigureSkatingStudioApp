@@ -39,13 +39,13 @@ The primary data item in the system is the training notification. The secondary 
 Follow these steps to run the app locally on your computer.
 
 1. Clone the repository
-   git clone <my-repo-url>
+   – git clone <my-repo-url>
    cd <my-project-folder>
-2. Create a virtual environment
+3. Create a virtual environment
    python -m venv venv
-3. Activate it
+4. Activate it
    source venv/bin/activate
-4. Install dependencies
+5. Install dependencies
    pip install flask
    pip install -r requirements.txt
 6. Set up the database
