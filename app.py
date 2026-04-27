@@ -51,13 +51,14 @@ def show_item(item_id):
     item = items.get_item(item_id)
     if not item:
         abort(404)
-    return render_template("show_item.html", item=item)
+    return render_template ("show_item.html", item=item)
 
 @app.route("/new_item")
 def new_item():
     require_login()
+    classes = items.get_all_classes() 
     coaches=users.get_all_users()
-    return render_template( "new_item.html", coaches=coaches)
+    return render_template( "new_item.html", coaches=coaches, classes=classes)
 
 @app.route("/create_item", methods=["POST"])
 def create_item():
@@ -87,7 +88,6 @@ def create_item():
     if len(training_description)>1000:
         abort(403)
     user_id=session["user_id"]
-
     items.add_item(title, training_type, specialization, format, training_level, coach_id, training_date, training_time, training_description, user_id)
     return redirect("/")
 

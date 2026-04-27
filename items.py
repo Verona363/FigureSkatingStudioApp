@@ -1,4 +1,19 @@
 import db
+
+def get_all_classes():
+    sql="SELECT title, value FROM classes ORDER BY id"
+    result = db.query(sql)
+
+    classes={}
+    for title, value in result:
+        classes[title]=[]
+    for title, value in result:
+        classes[title].append(value)
+
+    return classes
+
+
+
 def add_item(title, training_type, specialization, format, training_level, coach_id, training_date, training_time, training_description, user_id):
     sql = """INSERT INTO items
     (title, training_type, specialization, format, training_level, coach_id, training_date, training_time, training_description, user_id)

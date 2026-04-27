@@ -17,3 +17,8 @@ CREATE TABLE items(
     training_description TEXT,
     user_id INTEGER REFERENCES users
 );
+
+CREATE TABLE classes(
+    id INTEGER PRIMARY KEY,
+    title TEXT,
+    value TEXT);
