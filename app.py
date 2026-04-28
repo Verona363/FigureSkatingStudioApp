@@ -63,32 +63,74 @@ def new_item():
 @app.route("/create_item", methods=["POST"])
 def create_item():
     require_login()
+
+    CLASS_FIELDS = ["training_type", "specialization", "format", "training_level"]
+    OPTIONAL_FIELDS = {"specialization"}
+
+    all_classes = items.get_all_classes()
+    validated_classes = {}
+
     title = request.form["title"]
-    if not title or len(title)>80:
+    if not title or len(title) > 80:
         abort(403)
-    training_type= request.form["training_type"]
-    if not training_type:
-        abort(403)
-    specialization= request.form["specialization"]
-    format= request.form["format"]
-    if not format:
-        abort(403)
-    training_level= request.form["training_level"]
-    coach_id= int(request.form["coach_id"])
-    coach=users.get_user(coach_id)
+
+    for field in CLASS_FIELDS:
+        value = request.form.get(field)
+
+        # 🔒 field must exist
+        if value is None:
+            abort(403)
+
+        # ✅ optional handling
+        if value == "":
+            if field in OPTIONAL_FIELDS:
+                validated_classes[field] = None
+                continue
+            else:
+                abort(403)
+
+        # 🔒 field name must be valid
+        if field not in all_classes:
+            abort(403)
+
+        # 🔒 value must be one of allowed options
+        if value not in all_classes[field]:
+            abort(403)
+
+        validated_classes[field] = value
+
+    coach_id = int(request.form["coach_id"])
+    coach = users.get_user(coach_id)
     if not coach:
         abort(403)
-    training_date= request.form["training_date"]
+
+    training_date = request.form["training_date"]
     if not training_date:
         abort(403)
-    training_time= request.form["training_time"]
+
+    training_time = request.form["training_time"]
     if not training_time:
         abort(403)
-    training_description=request.form["training_description"]
-    if len(training_description)>1000:
+
+    training_description = request.form["training_description"]
+    if len(training_description) > 1000:
         abort(403)
-    user_id=session["user_id"]
-    items.add_item(title, training_type, specialization, format, training_level, coach_id, training_date, training_time, training_description, user_id)
+
+    user_id = session["user_id"]
+
+    items.add_item(
+        title,
+        validated_classes["training_type"],
+        validated_classes["specialization"],
+        validated_classes["format"],
+        validated_classes["training_level"],
+        coach_id,
+        training_date,
+        training_time,
+        training_description,
+        user_id
+    )
+
     return redirect("/")
 
 @app.route("/edit_item/<int:item_id>")
@@ -114,34 +156,70 @@ def update_item():
         abort(404)
     if item["user_id"] != session["user_id"] and item["coach_id"] != session["user_id"]:
         abort(403)
+    
     title = request.form["title"]
     if not title or len(title)>80:
         abort(403)
-    training_type= request.form["training_type"]
-    if not training_type:
-        abort(403)
-    specialization= request.form["specialization"]
-    format= request.form["format"]
-    if not format:
-        abort(403)
-    training_level= request.form["training_level"]
-    coach_id= int(request.form["coach_id"])
-    coach=users.get_user(coach_id)
+
+    CLASS_FIELDS = ["training_type", "specialization", "format", "training_level"]
+    OPTIONAL_FIELDS = {"specialization"}
+    all_classes = items.get_all_classes()
+    validated_classes = {}
+    for field in CLASS_FIELDS:
+        value = request.form.get(field)
+
+        # 🔒 field must exist
+        if value is None:
+            abort(403)
+
+        # ✅ optional handling
+        if value == "":
+            if field in OPTIONAL_FIELDS:
+                validated_classes[field] = None
+                continue
+            else:
+                abort(403)
+
+        # 🔒 field name must be valid
+        if field not in all_classes:
+            abort(403)
+
+        # 🔒 value must be one of allowed options
+        if value not in all_classes[field]:
+            abort(403)
+
+        validated_classes[field] = value
+
+    coach_id = int(request.form["coach_id"])
+    coach = users.get_user(coach_id)
     if not coach:
         abort(403)
-    training_date= request.form["training_date"]
+
+    training_date = request.form["training_date"]
     if not training_date:
         abort(403)
-    training_time= request.form["training_time"]
+
+    training_time = request.form["training_time"]
     if not training_time:
         abort(403)
-    training_description=request.form["training_description"]
-    if len(training_description)>1000:
+
+    training_description = request.form["training_description"]
+    if len(training_description) > 1000:
         abort(403)
 
-    items.update_item(item_id, title, training_type, specialization, format, training_level, coach_id, training_date, training_time, training_description)
-    
+    items.update_item(
+        item_id,
+        title,
+        validated_classes["training_type"],
+        validated_classes["specialization"],
+        validated_classes["format"],
+        validated_classes["training_level"],
+        coach_id,
+        training_date,
+        training_time,
+        training_description)
     return redirect("/item/"+str(item_id))
+
 
 @app.route("/remove_item/<int:item_id>", methods=["GET", "POST"])
 def remove_item(item_id):
