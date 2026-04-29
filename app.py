@@ -1,5 +1,6 @@
 import sqlite3
 from flask import Flask
+from flask import flash
 from flask import abort, redirect, render_template, request, session
 import db
 import config
@@ -51,7 +52,12 @@ def show_item(item_id):
     item = items.get_item(item_id)
     if not item:
         abort(404)
-    return render_template ("show_item.html", item=item)
+    participants=items.get_participants(item_id)
+
+    booked=False
+    if "user_id" in session:   #Check if user is logged in
+        booked = items.is_booked(item_id, session["user_id"]) #“Is THIS user booked for THIS training?”
+    return render_template ("show_item.html", item=item, participants=participants, booked=booked)
 
 @app.route("/new_item")
 def new_item():
@@ -59,6 +65,42 @@ def new_item():
     classes = items.get_all_classes() 
     coaches=users.get_all_users()
     return render_template( "new_item.html", coaches=coaches, classes=classes)
+
+
+@app.route("/book_training", methods=["POST"])
+def book_training():
+    require_login()
+    item_id = request.form["item_id"]
+    
+    item = items.get_item(item_id)
+    if not item:
+        abort(403)
+    
+    user_id = session["user_id"]
+    try:
+        items.add_booking(item_id, user_id)
+        flash("You booked a training")
+    except:
+        flash("You are already registered")
+        #pass #later show message "Already registered" and add cancel function
+
+    return redirect("/item/"+ str (item_id))
+
+@app.route("/cancel_booking", methods=["POST"])
+def cancel_booking():
+    require_login()
+    item_id = request.form["item_id"]
+    item = items.get_item(item_id)
+    if not item:
+        abort(403)
+    user_id = session["user_id"]
+    try:
+        items.cancel_booking(item_id, user_id)
+        flash("Booking is cancelled")
+    except:
+        pass #later show message "Already registered" and add cancel function
+
+    return redirect("/item/"+ str (item_id))
 
 @app.route("/create_item", methods=["POST"])
 def create_item():

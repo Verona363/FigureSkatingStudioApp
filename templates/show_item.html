@@ -7,6 +7,18 @@
 
 <body>
     <h1>{{ item.title }}</h1>
+<!-- Flash messages block -->
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul>
+      {% for message in messages %}
+        <li>{{ message }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+<!-- Flash messages block end -->
+
     {% if session.user_id == item.user_id or session.user_id == item.coach_id %}
   <p>
     <a href="/edit_item/{{ item.id }}" >Edit</a>
@@ -41,6 +53,28 @@
     <p>
         {{item.training_description}}
     </p>
+    
+    <h2>Particpants</h2>
+    <ul>
+        {% for participant in participants %}
+            <li><a href="/user/{{ participant.user_id }}">{{ participant.username }}</a></li>
+            {% endfor %}
+    </ul>
+
+    {% if session.user_id %}
+        {% if booked %}
+         <form action="/cancel_booking" method="post">
+          <input type="hidden" name="item_id" value="{{ item.id}}"/>
+          <input type="submit" value="Cancel booking"/>
+          </form>
+        {% else %}
+         <form action="/book_training" method="post">
+          <input type="hidden" name="item_id" value="{{ item.id }}"/>
+          <input type="submit" value="Book training"/>
+         </form>
+        {% endif %}
+    {% endif %}
+    <!-- end of new -->
     <p>
         <a href="/">To the main</a>
     </p>

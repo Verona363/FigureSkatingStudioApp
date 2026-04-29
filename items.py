@@ -24,6 +24,47 @@ def add_item(title, training_type, specialization, format, training_level, coach
         training_description, user_id
     ])
 
+def add_booking(item_id, user_id):
+#order of parameters(user_id, item_id) must be the same as in app.py
+    sql = """INSERT INTO participants
+    (item_id, user_id)
+    VALUES (?, ?)"""
+    db.execute(sql, [item_id, user_id])
+#INSERT INTO participants (item_id, user_id)
+##the column names must match the column names defined in table in schema.sql
+#VALUES (?, ?)
+#👉 Python must pass values in that exact order:
+#db.execute(sql, [item_id, user_id])
+
+def cancel_booking(item_id, user_id):
+#order of parameters(user_id, item_id) must be the same as in app.py
+    sql = """DELETE FROM participants
+    WHERE item_id=? AND user_id=?"""
+    db.execute(sql, [item_id, user_id])
+
+def get_participants(item_id):
+    sql="""SELECT users.id as user_id, users.username
+    FROM participants, users 
+    WHERE participants.user_id=users.id AND
+    participants.item_id=?
+    ORDER BY participants.id DESC"""
+    return db.query(sql, [item_id])
+
+def is_booked(item_id, user_id):
+    sql = """
+    SELECT 1 FROM participants
+    WHERE item_id = ? AND user_id = ?
+    LIMIT 1
+    """
+    result = db.query(sql, [item_id, user_id])
+    return len(result) > 0
+#“Is this user already booked for this training?”
+#Returns:
+#True → user is booked
+#False → user is not booked
+#LATER can write  return bool(db.query(sql, [item_id, user_id]))
+
+
 def get_items():
     sql = "SELECT id, title FROM items ORDER BY id DESC"
     return db.query(sql)

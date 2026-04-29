@@ -18,6 +18,13 @@ CREATE TABLE items(
     user_id INTEGER REFERENCES users
 );
 
+CREATE TABLE participants(
+    id INTEGER PRIMARY KEY,
+    item_id INTEGER NOT NULL REFERENCES items,
+    user_id INTEGER NOT NULL REFERENCES users,
+    UNIQUE (item_id, user_id)
+);
+
 CREATE TABLE classes(
     id INTEGER PRIMARY KEY,
     title TEXT,
