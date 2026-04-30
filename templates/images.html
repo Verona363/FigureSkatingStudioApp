@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title> User Profile Picture </title>
+</head>
+
+<body>
+    <h1> User Profile Picture </h1>
+    <h2> Add new picture</h2>
+    <form action="/add_image" method="post" enctype="multipart/form-data">
+    <p>
+      Picture: <input type="file" name="image" accept=".jpg" />
+    </p>
+    <input type="submit" value="Lähetä" />
+  </form>
+
+    <p>
+        <a href="/user/{{ user.id }}">Back</a>
+    </p>
+  
+</body>
+
+</html>

@@ -1,7 +1,8 @@
 CREATE TABLE users (
     id INTEGER PRIMARY KEY,
     username TEXT UNIQUE,
-    password_hash TEXT
+    password_hash TEXT,
+    image BLOB
 );
 
 CREATE TABLE items(
@@ -23,6 +24,12 @@ CREATE TABLE participants(
     item_id INTEGER NOT NULL REFERENCES items,
     user_id INTEGER NOT NULL REFERENCES users,
     UNIQUE (item_id, user_id)
+);
+
+CREATE TABLE images(
+    id INTEGER PRIMARY KEY,
+    user_id INTEGER REFERENCES users,
+    image BLOB
 );
 
 CREATE TABLE classes(

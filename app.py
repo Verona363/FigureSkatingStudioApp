@@ -1,7 +1,7 @@
 import sqlite3
 from flask import Flask
 from flask import flash
-from flask import abort, redirect, render_template, request, session
+from flask import abort, make_response, redirect, render_template, request, session
 import db
 import config
 import items
@@ -25,8 +25,44 @@ def show_user(user_id):
     if not user:
         abort(404)
     items=users.get_items(user_id)
-    return render_template("show_user.html", user=user, items=items)
+    image= users.get_image(user_id)
+    return render_template("show_user.html", user=user, items=items, image=image)
 
+@app.route("/images/<int:user_id>")
+def edit_images(user_id):
+    require_login()
+    user = users.get_user(user_id)
+    if not user:
+        abort(404)
+    if user["id"] != session["user_id"]:
+        abort(403)
+    image= users.get_image(user_id)
+    return render_template("images.html", user=user, image=image)
+
+@app.route("/add_image", methods=["GET", "POST"])
+def add_image():
+    require_login()
+    file = request.files["image"]
+    if not file.filename.endswith(".jpg"):
+        return "VIRHE: väärä tiedostomuoto"
+
+    image = file.read()
+    #if len(image) > 100 * 1024:
+    #    return "VIRHE: liian suuri kuva"
+
+    user_id = session["user_id"]
+    users.update_image(user_id, image)
+    return redirect("/user/" + str(user_id))
+
+@app.route("/image/<int:user_id>")
+def show_image(user_id):
+    image = users.get_image(user_id)
+    if not image:
+        abort(404)
+
+    response = make_response(bytes(image))
+    response.headers.set("Content-Type", "image/jpeg")
+    return response
 
 @app.route("/find_item")
 def find_item():

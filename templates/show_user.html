@@ -8,6 +8,11 @@
 <body>
     <h1> User {{ user.username }}</h1>
     <p>
+        <a href="/images/{{ user.id }}">Add Picture</a>
+    </p>
+    <p>
+    <img src="/image/{{ user.id }}" style="width: 150px; height: 190px; object-fit: cover;" />    </p>
+    <p>
         User has {{ items | count }} announcements.
     </p>
     <h2> Announcements </h2>
