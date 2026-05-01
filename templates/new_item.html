@@ -16,7 +16,8 @@
     {% for class in classes %}
     <p>
      {{ class }}: <br />
-     <select name="{{ class }}">
+     <select name="{{ class }}"
+      {% if class not in ["specialization"] %}required{% endif %}>
       <option value="">(choose)</option>
       {% for option in classes[class] %}
         <option value="{{ option }}">{{ option }}</option>
@@ -24,14 +25,19 @@
      </select>
      </p>
      {% endfor %}
+     {% if user.role == "admin" %}
     <p>
       Coach: <br />
       <select name="coach_id">
         {% for coach in coaches %}
-        <option value="{{ coach.id}}">{{ coach.username}} </option>
+        <option value="{{ coach.id}}">
+          {{ coach.username}}
+          {% if coach.role == "admin" %} (Admin){% endif %}
+        </option>
         {% endfor %}
       </select>
     </p>
+    {% endif %}
     <p>
       Date: <br />
       <input type="date" name="training_date" required />

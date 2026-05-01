@@ -15,8 +15,6 @@
    <p>
       Training type: <br />
       <select name="training_type" required>
-        <option value="">(choose)</option>
-
         <option value="off-ice"
           {% if item.training_type == "off-ice" %}selected{% endif %}>
           off-ice
@@ -28,8 +26,6 @@
       </option>
 </select>
     </p>
-
-    
     <p>
       Specialization: <br />
   <select name="specialization">
@@ -62,18 +58,20 @@
         <option value="advanced" {% if item.training_level == "advanced" %}selected{% endif %}>advanced</option>
       </select>
     </p>
+
+    {% if user.role == "admin" %}
     <p>
       Coach: <br />
       <select name="coach_id">
         {% for coach in coaches %}
         <option value="{{ coach.id }}"
         {% if coach.id == item.coach_id %}selected{% endif %}>
-        {{ coach.username }}
-      
+        {{ coach.username }}{% if coach.role == "admin" %} (Admin){% endif %}
       </option>
       {% endfor %}
       </select>
     </p>
+    {% endif %}
     <p>
       Date: <br />
       <input type="date" name="training_date" value="{{item.training_date}}" required/>

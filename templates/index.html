@@ -30,12 +30,21 @@
   </p>
 
   <h2>Announcements</h2>
-
   <ul>
     {% for item in items %}
     <li><a href="/item/{{ item.id }}">{{ item.title }}</a></li>
     {% endfor %}
   </ul>
+
+  <h2>Coaches</h2>
+    <ul>
+    {% for coach in coaches %}
+    <li><a href="/user/{{ coach.id }}">{{ coach.username }}</a></li>
+    {% endfor %}
+  </ul>
+
+
+
 </body>
 
 </html>

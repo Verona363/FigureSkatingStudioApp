@@ -16,7 +16,9 @@ def require_login():
 @app.route("/")
 def index():
     all_items = items.get_items()
-    return render_template( "index.html", items=all_items)
+    all_coaches= users.get_coaches()
+    #returns a list of rows, each is a dictionary
+    return render_template( "index.html", items=all_items, coaches=all_coaches)
     #should b added here loginhtml
 
 @app.route("/user/<int:user_id>")
@@ -97,18 +99,25 @@ def show_item(item_id):
     if not item:
         abort(404)
     participants=items.get_participants(item_id)
-
+    user=None
     booked=False
-    if "user_id" in session:   #Check if user is logged in
-        booked = items.is_booked(item_id, session["user_id"]) #“Is THIS user booked for THIS training?”
-    return render_template ("show_item.html", item=item, participants=participants, booked=booked)
+
+    if "user_id" in session:
+        user = users.get_user(session["user_id"])
+        booked = items.is_booked(item_id, session["user_id"])
+    return render_template ("show_item.html", item=item,
+                            participants=participants, booked=booked,
+                            user=user)
 
 @app.route("/new_item")
 def new_item():
     require_login()
     classes = items.get_all_classes() 
-    coaches=users.get_all_users()
-    return render_template( "new_item.html", coaches=coaches, classes=classes)
+    coaches=users.get_coaches()
+    user = users.get_user(session["user_id"])
+    if user["role"] not in ("coach", "admin"):
+        abort(403)
+    return render_template( "new_item.html", coaches=coaches, classes=classes, user=user)
 
 
 @app.route("/book_training", methods=["POST"])
@@ -149,6 +158,11 @@ def cancel_booking():
 @app.route("/create_item", methods=["POST"])
 def create_item():
     require_login()
+    user_id = session["user_id"]
+    user=users.get_user(user_id)
+
+    if user["role"] not in ("coach", "admin"):
+        abort(403)
 
     CLASS_FIELDS = ["training_type", "specialization", "format", "training_level"]
     OPTIONAL_FIELDS = {"specialization"}
@@ -185,7 +199,11 @@ def create_item():
 
         validated_classes[field] = value
 
-    coach_id = int(request.form["coach_id"])
+    if user["role"] == "admin":
+        coach_id = int(request.form["coach_id"])  # admin can choose
+    else:
+        coach_id = session["user_id"]  # coach can only assign themselves
+
     coach = users.get_user(coach_id)
     if not coach:
         abort(403)
@@ -202,7 +220,6 @@ def create_item():
     if len(training_description) > 1000:
         abort(403)
 
-    user_id = session["user_id"]
 
     items.add_item(
         title,
@@ -222,14 +239,17 @@ def create_item():
 @app.route("/edit_item/<int:item_id>")
 def edit_item(item_id):
     require_login()
+    user_id = session["user_id"]
+    user=users.get_user(user_id)
     item=items.get_item(item_id)
-    if item["user_id"] != session["user_id"] and item["coach_id"] != session["user_id"]:
-        abort(403)
     if not item:
         abort(404)
+    if item["coach_id"] != session["user_id"] and user["role"] != "admin":
+        abort(403)
+
     
-    coaches = users.get_all_users()
-    return render_template( "edit_item.html", item=item, coaches=coaches)
+    coaches = users.get_coaches()
+    return render_template( "edit_item.html", item=item, coaches=coaches, user=user)
 
 
 @app.route("/update_item", methods=["POST"])
@@ -238,9 +258,11 @@ def update_item():
     item_id = request.form["item_id"] #something what is different from create item function
     #requesting item id from html edit_item
     item=items.get_item(item_id)
+    user_id = session["user_id"]
+    user=users.get_user(user_id)
     if not item:
         abort(404)
-    if item["user_id"] != session["user_id"] and item["coach_id"] != session["user_id"]:
+    if item["coach_id"] != session["user_id"] and user["role"] != "admin":
         abort(403)
     
     title = request.form["title"]
@@ -276,7 +298,11 @@ def update_item():
 
         validated_classes[field] = value
 
-    coach_id = int(request.form["coach_id"])
+    if user["role"] == "admin":
+        coach_id = int(request.form["coach_id"])  # admin can choose
+    else:
+        coach_id = session["user_id"]  # coach can only assign themselves
+
     coach = users.get_user(coach_id)
     if not coach:
         abort(403)
@@ -311,9 +337,11 @@ def update_item():
 def remove_item(item_id):
     require_login()
     item=items.get_item(item_id)
+    user_id = session["user_id"]
+    user=users.get_user(user_id)
     if not item:
         abort(404)
-    if item["user_id"] != session["user_id"] and item["coach_id"] != session["user_id"]:
+    if item["coach_id"] != session["user_id"] and user["role"] != "admin":
         abort(403)
         
     if request.method == "GET":
@@ -338,12 +366,20 @@ def create():
     username = request.form["username"]
     password1 = request.form["password1"]
     password2 = request.form["password2"]
+    role=request.form["role"]
+
+    #1 Validate passwords
     if password1 != password2:
         return "ERROR: passwords do not match"
+    #2 Validate role
+    if role not in ("client", "coach"):
+        abort(403)
+    #3 Create User
     try:
-        users.create_user(username, password1)
+        users.create_user(username, password1, role)
     except sqlite3.IntegrityError:
         return "ERROR: id is already taken"
+
     return "Account created"
     #Later add a button back to the main later on!!
     #no redirecting

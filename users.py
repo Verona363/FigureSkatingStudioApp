@@ -1,10 +1,10 @@
 import db
 from werkzeug.security import check_password_hash, generate_password_hash
 
-def create_user(username, password1):
+def create_user(username, password1, role):
     password_hash = generate_password_hash(password1)
-    sql = "INSERT INTO users (username, password_hash) VALUES (?, ?)"
-    db.execute(sql, [username, password_hash])
+    sql = "INSERT INTO users (username, password_hash, role) VALUES (?, ?, ?)"
+    db.execute(sql, [username, password_hash, role])
 
 def check_login(username, password):
     sql = "SELECT id, password_hash FROM users WHERE username = ?"
@@ -20,7 +20,7 @@ def check_login(username, password):
         return None
 
 def get_user(user_id):
-    sql = """SELECT id, username
+    sql = """SELECT id, username, role
     FROM users
     WHERE id=?"""
     result= db.query(sql, [user_id])
@@ -31,7 +31,7 @@ def update_image(user_id, image):
     db.execute(sql, [image, user_id])
 
 def remove_image(user_id):
-    sql="UPDATE users SET image=NULL WHERE id=?"
+    sql="UPDATE users SET image = NULL WHERE id = ?"
     db.execute(sql, [user_id])
 
 def get_image(user_id):
@@ -46,6 +46,11 @@ def get_image(user_id):
 
 def get_all_users():
     sql = "SELECT id, username FROM users"
+    return db.query(sql)
+
+def get_coaches():
+    sql = """SELECT id, username, role FROM users
+             WHERE role="coach" OR role="admin" """
     return db.query(sql)
 
 def get_items(user_id):

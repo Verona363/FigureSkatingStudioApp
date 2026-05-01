@@ -19,7 +19,7 @@
 {% endwith %}
 <!-- Flash messages block end -->
 
-    {% if session.user_id == item.user_id or session.user_id == item.coach_id %}
+    {% if session.user_id == item.coach_id or user.role=="admin" %}
   <p>
     <a href="/edit_item/{{ item.id }}" >Edit</a>
     <a href="/remove_item/{{ item.id }}" >Delete</a>
