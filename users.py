@@ -30,6 +30,10 @@ def update_image(user_id, image):
     sql = "UPDATE users SET image = ? WHERE id = ?"
     db.execute(sql, [image, user_id])
 
+def remove_image(user_id):
+    sql="UPDATE users SET image=NULL WHERE id=?"
+    db.execute(sql, [user_id])
+
 def get_image(user_id):
     sql="SELECT image FROM users WHERE id = ?"
     result = db.query(sql, [user_id])

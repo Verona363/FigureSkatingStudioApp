@@ -54,6 +54,14 @@ def add_image():
     users.update_image(user_id, image)
     return redirect("/user/" + str(user_id))
 
+@app.route("/remove_image", methods=["POST"])
+def remove_image():
+    require_login()
+    user_id = session["user_id"]
+    # or it can be user_id=request.form["user_id"] doesnt mattter, because anyway user with the wrong session id can even enter images page
+    users.remove_image(user_id)
+    return redirect("/user/" + str(user_id))
+
 @app.route("/image/<int:user_id>")
 def show_image(user_id):
     image = users.get_image(user_id)
