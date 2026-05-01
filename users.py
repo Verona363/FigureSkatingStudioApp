@@ -33,7 +33,10 @@ def update_image(user_id, image):
 def get_image(user_id):
     sql="SELECT image FROM users WHERE id = ?"
     result = db.query(sql, [user_id])
-    return result[0]["image"] if result else None
+    return result[0]["image"] if result else None #👉 Returns: bytes
+
+#👉 db.query() returns a list of rows
+#Each row behaves like a dictionary.
 
 
 
