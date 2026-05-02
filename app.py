@@ -18,7 +18,10 @@ def index():
     all_items = items.get_items()
     all_coaches= users.get_coaches()
     #returns a list of rows, each is a dictionary
-    return render_template( "index.html", items=all_items, coaches=all_coaches)
+    user=None
+    if "user_id" in session:
+        user = users.get_user(session["user_id"])
+    return render_template( "index.html", items=all_items, coaches=all_coaches, user=user)
     #should b added here loginhtml
 
 @app.route("/user/<int:user_id>")

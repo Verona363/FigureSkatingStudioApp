@@ -10,24 +10,22 @@
 
   {% if session.username %}
   <p>
-    You are logged in as {{ session.username }}, id number is {{session.user_id}}
-  </p>
-  <p>
-    <a href="/logout">Log out</a>
-  </p>
-  <p>
-    <a href="/new_item"> Add a new training session </a>
-  </p>
-  {% else %}
-  <p>
-    <a href="/login">Log In</a>
-    <a href="/register">Create ID</a>
+    You are logged in as {{ session.username }}
   </p>
   {% endif %}
-
   <p>
-    <a href="/find_item"> Search for training session </a>
+    <a href="/find_item"> Search for training session </a> |
+  {% if session.user_id %}
+      {% if user.role=="admin" or user.role=="coach"%} 
+      <a href="/new_item"> Add a new training session </a> |
+      {% endif %}
+  <a href="/logout">Log out</a>
+  {% else %}
+    <a href="/login">Log In</a> |
+    <a href="/register">Create ID</a>
+  {% endif %}
   </p>
+
 
   <h2>Announcements</h2>
   <ul>
