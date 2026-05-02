@@ -1,11 +1,9 @@
-<!DOCTYPE html>
-<html>
+{% extends "layout.html" %}
 
-<head>
-  <title>Rekisteröinti</title>
-</head>
+{% block title %}Create Account{% endblock %}
 
-<body>
+{% block content %}
+<h2>Create Account</h2>
   <form action="/create" method="post">
     <p>
       ID: <br />
@@ -29,6 +27,4 @@
     
     <input type="submit" value="Create an ID" />
   </form>
-</body>
-
-</html>
+{% endblock %}

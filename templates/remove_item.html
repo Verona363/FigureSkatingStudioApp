@@ -1,12 +1,9 @@
-<!DOCTYPE html>
-<html>
+{% extends "layout.html" %}
 
-<head>
-  <title>Delete training session</title>
-</head>
+{% block title %}Delete training session{% endblock %}
 
-<body>
-    <h1>Delete training session</h1>
+{% block content %}
+    <h2>Delete training session</h2>
     <p>Announcement: {{ item.title }}</p>
     <p>Are you sure you want to delete this training?</p>
   <form action="/remove_item/{{ item.id }}" method="post"> 
@@ -16,7 +13,4 @@
     </form>
     <!--When the form is submitted, send data to /remove_item/-->
     <!--Use method POST, buttons must be inside the tag form, to get sent to the server-->
-  
-</body>
-
-</html>
+{% endblock %}

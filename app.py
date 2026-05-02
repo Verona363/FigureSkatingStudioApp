@@ -39,7 +39,7 @@ def edit_images(user_id):
     user = users.get_user(user_id)
     if not user:
         abort(404)
-    if user["id"] != session["user_id"]:
+    if user["id"] != session["user_id"] or user["role"] != "admin":
         abort(403)
     image= users.get_image(user_id)
     return render_template("images.html", user=user, image=image)
@@ -79,6 +79,9 @@ def show_image(user_id):
 
 @app.route("/find_item")
 def find_item():
+    user=None
+    if "user_id" in session:
+        user = users.get_user(session["user_id"])
     query=request.args.get("query")
     #"query" matches the HTML input name="query"
     if query:
@@ -91,7 +94,7 @@ def find_item():
     else:
         query=""
         results=[]
-    return render_template( "find_item.html", query=query, results=results)
+    return render_template( "find_item.html", query=query, results=results, user=user)
     #for this part query=qury (1st is what html sees as a variable,
     #2ND is our python code variable name)
     #html_template_variable = python_variable
@@ -348,7 +351,7 @@ def remove_item(item_id):
         abort(403)
         
     if request.method == "GET":
-        return render_template( "remove_item.html", item=item)
+        return render_template( "remove_item.html", item=item, user=user)
     if request.method == "POST":
         if "remove" in request.form:
     #If we press remove, then it does the following:
@@ -389,9 +392,12 @@ def create():
 
 @app.route("/login", methods=[ "GET", "POST"])
 def login():
+    user=None
+    if "user_id" in session:
+        return redirect("/")
     if request.method == "GET":
     #if we just came to this page
-        return render_template("login.html")
+        return render_template("login.html", user=user)
 
     if request.method =="POST":
     #we cant open login in the browser, the route only handles form submission(since there was no get before)

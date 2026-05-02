@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>{% block title %}{% endblock %}</title>
+</head>
+
+<body>
+  <h1>Figure Skating Studio</h1>
+
+  {% if session.username %}
+  <p>
+    You are logged in as {{ session.username }}
+  </p>
+  {% endif %} 
+  <p>
+    <a href="/"> Main page </a> |
+    <a href="/find_item"> Search for training session </a> |
+  {% if session.user_id %}
+      {% if user.role=="admin" or user.role=="coach"%} 
+      <a href="/new_item"> Add a new training session </a> |
+      {% endif %}
+  <a href="/logout">Log out</a>
+  {% else %}
+    <a href="/login">Log In</a> |
+    <a href="/register">Create ID</a>
+  {% endif %}
+  </p>
+
+  {% block content %}{% endblock %}
+
+
+</body>
+
+</html>

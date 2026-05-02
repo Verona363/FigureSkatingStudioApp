@@ -1,22 +1,15 @@
-<!DOCTYPE html>
-<html>
+{% extends "layout.html" %}
 
-<head>
-  <title>Search for training</title>
-</head>
+{% block title %}Search for training{% endblock %}
 
-<body>
-  <h1> Search for training </h1>
+{% block content %}
+  <h2> Search for training </h2>
   <form action="/find_item" method="get">
     <p>
       Search term: <input type="text" name="query" value="{{ query }}">
     </p>
     <input type="submit" value="Search">
   </form>
-
-  <p>
-    <a href="/">Go back</a>
-  </p>
 
   {% if query %}
   <!--check value of value={{ query }}-->
@@ -29,7 +22,4 @@
     </ul>
   {% endif %}
   <!--This block means: “Only show <h2>Results</h2> if query has a value”-->
-  
-</body>
-
-</html>
+{% endblock %}

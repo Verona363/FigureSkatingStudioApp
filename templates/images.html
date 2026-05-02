@@ -1,17 +1,14 @@
-<!DOCTYPE html>
-<html>
+{% extends "layout.html" %}
 
-<head>
-  <title> User Profile Picture </title>
-</head>
+{% block title %}User Profile Picture{% endblock %}
 
-<body>
-    <h1> User Profile Picture </h1>
+{% block content %}
+    <h2> User Profile Picture </h2>
     <form action="/remove_image" method="post">
     <img src="/image/{{ user.id }}" style="width: 150px; height: 190px; object-fit: cover;" />    </p>
     <input type="submit" value="Remove" /> 
     </form>
-    <h2> Add new picture</h2>
+    <h3> Add new picture</h3>
     <form action="/add_image" method="post" enctype="multipart/form-data">
     <p>
       Picture: <input type="file" name="image" accept=".jpg" />
@@ -22,7 +19,4 @@
     <p>
         <a href="/user/{{ user.id }}">Back</a>
     </p>
-  
-</body>
-
-</html>
+ {% endblock %}

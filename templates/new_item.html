@@ -1,12 +1,9 @@
-<!DOCTYPE html>
-<html>
+{% extends "layout.html" %}
 
-<head>
-  <title>New training session</title>
-</head>
+{% block title %}New training{% endblock %}
 
-<body>
-    <h1>Add a new training session</h1>
+{% block content %}
+ <h2>Add a new training session</h2>
   <form action="/create_item" method="post">
     <p>
       Title: <br />  
@@ -52,6 +49,4 @@
     </p>
     <input type="submit" value="Add new session" />
   </form>
-</body>
-
-</html>
+{% endblock %}

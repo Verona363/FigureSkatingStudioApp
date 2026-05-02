@@ -1,12 +1,9 @@
-<!DOCTYPE html>
-<html>
+{% extends "layout.html" %}
 
-<head>
-  <title>{{ item.title }}</title>
-</head>
+{% block title %}{{ item.title }}{% endblock %}
 
-<body>
-    <h1>{{ item.title }}</h1>
+{% block content %}
+    <h2>{{ item.title }}</h2>
 <!-- Flash messages block -->
 {% with messages = get_flashed_messages() %}
   {% if messages %}
@@ -75,10 +72,4 @@
         {% endif %}
     {% endif %}
     <!-- end of new -->
-    <p>
-        <a href="/">To the main</a>
-    </p>
-  
-</body>
-
-</html>
+{% endblock %}
