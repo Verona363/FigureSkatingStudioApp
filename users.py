@@ -57,7 +57,9 @@ def get_items(user_id):
     sql = """SELECT id,
     title,
     training_type,
-    training_level
+    training_level,
+    training_date,
+    training_time
     FROM items
     WHERE coach_id=?
     ORDER BY id DESC"""

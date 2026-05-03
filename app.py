@@ -29,9 +29,11 @@ def show_user(user_id):
     user = users.get_user(user_id)
     if not user:
         abort(404)
-    items=users.get_items(user_id)
+    
+    bookings=items.get_bookings(user_id)
+    myitems=users.get_items(user_id)
     image= users.get_image(user_id)
-    return render_template("show_user.html", user=user, items=items, image=image)
+    return render_template("show_user.html", user=user, items=myitems, image=image, bookings=bookings)
 
 @app.route("/images/<int:user_id>")
 def edit_images(user_id):

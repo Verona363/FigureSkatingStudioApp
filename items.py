@@ -64,9 +64,15 @@ def is_booked(item_id, user_id):
 #False → user is not booked
 #LATER can write  return bool(db.query(sql, [item_id, user_id]))
 
+def get_bookings(user_id):
+    sql=""" SELECT participants.item_id, items.title, 
+    items.training_date, items.training_time, items.training_level
+    FROM participants, items
+    WHERE items.id=participants.item_id AND participants.user_id=?"""
+    return db.query(sql, [user_id])
 
 def get_items():
-    sql = "SELECT id, title FROM items ORDER BY id DESC"
+    sql = "SELECT id, title, training_date, training_time FROM items ORDER BY id DESC"
     return db.query(sql)
 
 

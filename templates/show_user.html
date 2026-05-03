@@ -3,7 +3,14 @@
 {% block title %}User {{user.username}} {% endblock %}
 
 {% block content %}
-    <h2> User {{ user.username }}</h2>
+{% if user.role == "coach" %}
+    <h2>Coach {{ user.username }}</h2>
+{% elif user.role == "client" %}
+    <h2>Client {{ user.username }}</h2>
+{% elif user.role == "admin" %}
+    <h2>Head coach {{ user.username }}</h2>
+{% endif %}
+
     {% if session.user_id %}
         {% if session.role == "admin" and user.role != "client" %}
             <a href="/images/{{ user.id }}">Edit Profile Picture</a>
@@ -11,23 +18,54 @@
             <a href="/images/{{ user.id }}">Edit Profile Picture</a>
         {% endif %}
     {% endif %}
-    <p>Session role: {{ session.get("role") }}</p>
-    <p>Viewed user role: {{ user.role }}</p>
     <p>
     <img src="/image/{{ user.id }}" style="width: 150px; height: 190px; object-fit: cover;" />    </p>
-    <p>
+{% if user.role in ["coach", "admin"] %}    <p>
         User has {{ items | count }} announcements.
     </p>
     <h2> Announcements </h2>
     <ul> 
         {% for item in items %}
-        <li><a href="/item/{{ item.id }}">{{item.title}}</a>
-
+        <li>
+        <a href="/item/{{ item.id }}">{{ item.title }}</a>
+        <p>
+            Date: {{ item.training_date }} | Time: {{ item.training_time }}
+        </p>
         {% if item.training_level %}
             <p>(Level: {{ item.training_level }})</p>
         {% endif %}
-
         </li>
         {% endfor %}
     </ul>
+    {% endif %}
+
+{% if user.role == "client" %}
+    <p>
+        User has {{ bookings | count }} registrations.
+    </p>
+    <h2> Registrations </h2>
+    {% if bookings %}
+    <ul>
+        {% for booking in bookings %}
+    <li>
+        <a href="/item/{{ booking.item_id }}">{{booking.title}}</a>
+        <p>
+        Date: {{ booking.training_date}} | Time: {{ booking.training_time}}
+        </p>
+            {% if booking.training_level %}
+            <p>(Level: {{ booking.training_level }})</p>
+            {% endif %}
+            </li>
+        {% endfor %}
+        </ul>
+    {% else %}
+    <p>User has not registered for any trainings.</p>
+    {% endif %}
+{% endif %}
+
+
+
+        
+    
+
 {% endblock %}
