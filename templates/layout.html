@@ -9,10 +9,9 @@
 
 <body>
   <h1>Figure Skating Studio</h1>
-
-  {% if session.username %}
+  {% if session.user_id %}
   <p>
-    You are logged in as {{ session.username }}
+    You are logged in as <a href="/user/{{ session.user_id }}">{{ session.username }}</a>
   </p>
   {% endif %} 
   <p>
@@ -28,10 +27,16 @@
     <a href="/register">Create ID</a>
   {% endif %}
   </p>
-
+  {% with messages = get_flashed_messages() %}
+  {% if messages %}
+    {% for message in messages %}
+      <div class="info">
+        {{ message }}
+      </div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
   {% block content %}{% endblock %}
-
-
 </body>
 
 </html>

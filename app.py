@@ -88,7 +88,7 @@ def add_image():
 
     file = request.files["image"]
     if not file.filename.endswith(".jpg"):
-        return "ERROR: wrong file format"
+        flash("ERROR: wrong file format")
 
     image = file.read()
 
@@ -194,7 +194,6 @@ def book_training():
         flash("You booked a training")
     except:
         flash("You are already registered")
-        #pass #later show message "Already registered" and add cancel function
 
     return redirect("/item/"+ str (item_id))
 
@@ -212,7 +211,7 @@ def cancel_booking():
         items.cancel_booking(item_id, user_id)
         flash("Booking is cancelled")
     except:
-        pass #later show message "Already registered" and add cancel function
+        pass 
 
     return redirect("/item/"+ str (item_id))
 
@@ -437,7 +436,8 @@ def create():
 
     #1 Validate passwords
     if password1 != password2:
-        return "ERROR: passwords do not match"
+        flash("ERROR: passwords do not match")
+        return redirect("/register")
     #2 Validate role
     if role not in ("client", "coach"):
         abort(403)
@@ -445,11 +445,11 @@ def create():
     try:
         users.create_user(username, password1, role)
     except sqlite3.IntegrityError:
-        return "ERROR: id is already taken"
+        flash("ERROR: username is already taken")
+        return redirect("/register")
+    
+    return redirect("/")
 
-    return "Account created"
-    #Later add a button back to the main later on!!
-    #no redirecting
 
 @app.route("/login", methods=[ "GET", "POST"])
 def login():
@@ -462,7 +462,8 @@ def login():
         return render_template("login.html", user=user)
 
     if request.method =="POST":
-    #we cant open login in the browser, the route only handles form submission(since there was no get before)
+    #we cant open login in the browser, 
+    #the route only handles form submission(since there was no get before)
     #if user able to login directs him to the main page
         username = request.form["username"]
         password = request.form["password"]
@@ -481,9 +482,10 @@ def login():
             session["role"]=role
             session["csrf_token"] = secrets.token_hex(16)
             return redirect("/")
-        #redirecting to the main page afer login
         else:
-            return "VIRHE: väärä tunnus tai salasana"
+            flash("ERROR: incorrect username or password")
+            return redirect("/login")
+
 
 @app.route("/logout")
 def logout():

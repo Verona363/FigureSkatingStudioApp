@@ -4,18 +4,6 @@
 
 {% block content %}
     <h2>{{ item.title }}</h2>
-<!-- Flash messages block -->
-{% with messages = get_flashed_messages() %}
-  {% if messages %}
-    <ul>
-      {% for message in messages %}
-        <li>{{ message }}</li>
-      {% endfor %}
-    </ul>
-  {% endif %}
-{% endwith %}
-<!-- Flash messages block end -->
-
     {% if session.user_id == item.coach_id or user.role=="admin" %}
   <p>
     <a href="/edit_item/{{ item.id }}" >Edit</a>
@@ -51,7 +39,7 @@
         {{item.training_description}}
     </p>
     
-    <h2>Particpants</h2>
+    <h3>Particpants</h3>
     <ul>
         {% for participant in participants %}
             <li><a href="/user/{{ participant.user_id }}">{{ participant.username }}</a></li>

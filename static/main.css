@@ -9,6 +9,13 @@ a {
   color: #2563eb;
 }
 
+.info {
+    border: 2px solid black;
+    margin: 1em;
+    padding: 0.5em;
+    background-color: #ff4da6; /* vivid pink */
+    color: black;
+}
 
 .item {
     border: 2px solid black;
