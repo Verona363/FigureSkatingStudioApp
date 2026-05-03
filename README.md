@@ -58,6 +58,7 @@ pip install flask
 6. Set up the database
 ```bash
 sqlite3 database.db < schema.sql
+sqlite3 database.db < init.sql
 ```
 7. Run the flask app
 ```bash
