@@ -27,13 +27,9 @@
     <ul> 
         {% for item in items %}
         <li>
-        <a href="/item/{{ item.id }}">{{ item.title }}</a>
-        <p>
-            Date: {{ item.training_date }} | Time: {{ item.training_time }}
-        </p>
-        {% if item.training_level %}
-            <p>(Level: {{ item.training_level }})</p>
-        {% endif %}
+            <a href="/item/{{ item.id }}">{{ item.title }}</a><br/>
+            Date: {{ item.training_date }} | Time: {{ item.training_time }}<br />
+            Level: {{ item.training_level }} 
         </li>
         {% endfor %}
     </ul>
@@ -48,14 +44,11 @@
     <ul>
         {% for booking in bookings %}
     <li>
-        <a href="/item/{{ booking.item_id }}">{{booking.title}}</a>
-        <p>
-        Date: {{ booking.training_date}} | Time: {{ booking.training_time}}
-        </p>
-            {% if booking.training_level %}
-            <p>(Level: {{ booking.training_level }})</p>
-            {% endif %}
-            </li>
+        <a href="/item/{{ booking.item_id }}">{{booking.title}}</a> <br />
+        Date: {{ booking.training_date }} | Time: {{ booking.training_time }}<br />
+        Level: {{ booking.training_level }} <br />
+        Coach: <a href="/user/{{ booking.coach_id }}">{{ booking.username }}</a> 
+        </li>
         {% endfor %}
         </ul>
     {% else %}

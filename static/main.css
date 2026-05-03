@@ -1,0 +1,17 @@
+body {
+  margin: auto;
+  max-width: 50em;
+  font-family: sans-serif;
+  background-color: #F3E8FF;
+}
+
+a {
+  color: #2563eb;
+}
+
+
+.item {
+    border: 2px solid black;
+    margin: 1em;
+    padding: 0.2em 0.5em;
+}
