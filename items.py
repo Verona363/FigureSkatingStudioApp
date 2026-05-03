@@ -171,6 +171,8 @@ def update_item(item_id, title, training_type, specialization, format, training_
     #There is 1 ? placeholder in the WHERE clause → for the item_id.
     
 def remove_item(item_id):
+    sql="DELETE FROM participants WHERE item_id=?"
+    db.execute(sql, [item_id])
     sql = "DELETE FROM items where id = ?"
     db.execute(sql, [item_id])
 
