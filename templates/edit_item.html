@@ -3,7 +3,8 @@
 {% block title %}Edit training session{% endblock %}
 
 {% block content %}
-    <h2>Edit training session</h2>
+    <h2>{{item.title}}</h2>
+    <h3>Edit training session</h3>
   <form action="/update_item" method="post">
     <p>
       Title: <br />  
@@ -85,8 +86,9 @@
     <input type="hidden" name = "item_id" value="{{item.id}}"/> <!--adding hidden item_id to pass it to the function-->
     <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
 
-    <input type="submit" value="Edit session" />
-
-      
+    <input type="submit" value="Edit session" />   
   </form>
+    <p>
+      <a href="/item/{{ item.id }}">Back to the announcement</a>
+    </p>
 {% endblock %}

@@ -3,7 +3,15 @@
 {% block title %}User Profile Picture{% endblock %}
 
 {% block content %}
-    <h2> User Profile Picture </h2>
+{% if user.role == "coach" %}
+    {% set role_label = "Coach" %}
+{% elif user.role == "client" %}
+    {% set role_label = "Client" %}
+{% elif user.role == "admin" %}
+    {% set role_label = "Head coach" %}
+{% endif %}
+<h2>{{ role_label }} {{ user.username }}</h2>
+    <h3>Profile Picture</h3>
     <form action="/remove_image" method="post">
     <input type="hidden" name="user_id" value="{{ user.id }}">
     <img src="/image/{{ user.id }}" style="width: 150px; height: 190px; object-fit: cover;" /></p>
@@ -24,6 +32,6 @@
   </form>
 
     <p>
-        <a href="/user/{{ user.id }}">Back</a>
+        <a href="/user/{{ user.id }}">Back to user page</a>
     </p>
  {% endblock %}

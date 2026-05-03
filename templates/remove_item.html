@@ -4,7 +4,7 @@
 
 {% block content %}
     <h2>Delete training session</h2>
-    <p>Announcement: {{ item.title }}</p>
+    <p>Announcement: <a href="/item/{{ item.id }}"> {{item.title}}</a></p>
     <p>Are you sure you want to delete this training?</p>
   <form action="/remove_item/{{ item.id }}" method="post"> 
     <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
