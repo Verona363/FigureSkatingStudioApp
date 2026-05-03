@@ -5,11 +5,14 @@
 {% block content %}
     <h2> User Profile Picture </h2>
     <form action="/remove_image" method="post">
+    <input type="hidden" name="user_id" value="{{ user.id }}">
     <img src="/image/{{ user.id }}" style="width: 150px; height: 190px; object-fit: cover;" />    </p>
     <input type="submit" value="Remove" /> 
     </form>
+
     <h3> Add new picture</h3>
     <form action="/add_image" method="post" enctype="multipart/form-data">
+    <input type="hidden" name="user_id" value="{{ user.id }}">
     <p>
       Picture: <input type="file" name="image" accept=".jpg" />
     </p>

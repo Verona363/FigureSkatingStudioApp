@@ -36,36 +36,76 @@ def show_user(user_id):
 @app.route("/images/<int:user_id>")
 def edit_images(user_id):
     require_login()
-    user = users.get_user(user_id)
-    if not user:
+
+    current_user = users.get_user(session["user_id"])
+    target_user = users.get_user(user_id)
+
+    if not target_user:
         abort(404)
-    if user["id"] != session["user_id"] or user["role"] != "admin":
-        abort(403)
+    #  RULES:
+    # Admin can edit:
+    #   - himself
+    #   - coaches
+    # Admin CANNOT edit clients
+    # Non-admins can only edit themselves
+    if current_user["role"] == "admin":
+        if target_user["role"] == "client" and target_user["id"] != current_user["id"]:
+            abort(403)
+    else:
+        if target_user["id"] != current_user["id"]:
+            abort(403)
+    
     image= users.get_image(user_id)
-    return render_template("images.html", user=user, image=image)
+    return render_template("images.html", user=target_user, image=image)
 
 @app.route("/add_image", methods=["GET", "POST"])
 def add_image():
     require_login()
+
+    current_user = users.get_user(session["user_id"])
+    target_user_id = int(request.form["user_id"])
+    target_user = users.get_user(target_user_id)
+
+    if not target_user:
+        abort(404)
+
+    if current_user["role"] == "admin":
+        if target_user["role"] == "client" and target_user["id"] != current_user["id"]:
+            abort(403)
+    else:
+        if target_user["id"] != current_user["id"]:
+            abort(403)
+
     file = request.files["image"]
     if not file.filename.endswith(".jpg"):
-        return "VIRHE: väärä tiedostomuoto"
+        return "ERROR: wrong file format"
 
     image = file.read()
-    #if len(image) > 100 * 1024:
-    #    return "VIRHE: liian suuri kuva"
 
-    user_id = session["user_id"]
-    users.update_image(user_id, image)
-    return redirect("/user/" + str(user_id))
+    users.update_image(target_user_id, image)
+    return redirect("/user/" + str(target_user_id))
 
 @app.route("/remove_image", methods=["POST"])
 def remove_image():
     require_login()
-    user_id = session["user_id"]
-    # or it can be user_id=request.form["user_id"] doesnt mattter, because anyway user with the wrong session id can even enter images page
-    users.remove_image(user_id)
-    return redirect("/user/" + str(user_id))
+
+    current_user = users.get_user(session["user_id"])
+    target_user_id = int(request.form["user_id"])
+    target_user = users.get_user(target_user_id)
+
+    if not target_user:
+        abort(404)
+
+    if current_user["role"] == "admin":
+        if target_user["role"] == "client" and target_user["id"] != current_user["id"]:
+            abort(403)
+    else:
+        if target_user["id"] != current_user["id"]:
+            abort(403)
+
+    users.remove_image(target_user_id)
+
+    return redirect("/user/" + str(target_user_id))
 
 @app.route("/image/<int:user_id>")
 def show_image(user_id):
@@ -395,6 +435,7 @@ def login():
     user=None
     if "user_id" in session:
         return redirect("/")
+
     if request.method == "GET":
     #if we just came to this page
         return render_template("login.html", user=user)
@@ -412,8 +453,11 @@ def login():
         #A database query always returns: a list of rows
         #each row is a tuple of column
         if user_id:
+            user=users.get_user(user_id)
             session["user_id"]=user_id
             session["username"] = username
+            role=user["role"]
+            session["role"]=role
             return redirect("/")
         #redirecting to the main page afer login
         else:
