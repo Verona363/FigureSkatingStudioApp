@@ -1,5 +1,6 @@
 import secrets
 import sqlite3
+import markupsafe
 from flask import Flask
 from flask import flash
 from flask import abort, make_response, redirect, render_template, request, session
@@ -19,6 +20,12 @@ def check_csrf():
         abort(403) 
     if request.form["csrf_token"] != session["csrf_token"]:
         abort(403) 
+
+@app.template_filter()
+def show_lines(content):
+    content = str(markupsafe.escape(content))
+    content = content.replace("\n", "<br />")
+    return markupsafe.Markup(content)
 
 @app.route("/")
 def index():
@@ -462,18 +469,10 @@ def login():
         return render_template("login.html", user=user)
 
     if request.method =="POST":
-    #we cant open login in the browser, 
-    #the route only handles form submission(since there was no get before)
-    #if user able to login directs him to the main page
         username = request.form["username"]
         password = request.form["password"]
         user_id=users.check_login(username, password)
-        #password_hash=db.query(sql, [username])[0][0]
-        #executes SELECT password_hash FROM users WHERE username = ?
-        #The ? is replaced safely with username
-        #[("pbkdf2:sha256:600000$abc123$xyz...",)]
-        #A database query always returns: a list of rows
-        #each row is a tuple of column
+
         if user_id:
             user=users.get_user(user_id)
             session["user_id"]=user_id
