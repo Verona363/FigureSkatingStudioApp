@@ -6,7 +6,9 @@
     <h2> User Profile Picture </h2>
     <form action="/remove_image" method="post">
     <input type="hidden" name="user_id" value="{{ user.id }}">
-    <img src="/image/{{ user.id }}" style="width: 150px; height: 190px; object-fit: cover;" />    </p>
+    <img src="/image/{{ user.id }}" style="width: 150px; height: 190px; object-fit: cover;" /></p>
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
+
     <input type="submit" value="Remove" /> 
     </form>
 
@@ -16,6 +18,8 @@
     <p>
       Picture: <input type="file" name="image" accept=".jpg" />
     </p>
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
+
     <input type="submit" value="Submit" />
   </form>
 

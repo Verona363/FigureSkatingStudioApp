@@ -47,6 +47,7 @@
       Description: <br />
       <textarea name="training_description" rows="8" cols="80" maxlength="1000"></textarea>
     </p>
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
     <input type="submit" value="Add new session" />
   </form>
 {% endblock %}

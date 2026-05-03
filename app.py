@@ -1,3 +1,4 @@
+import secrets
 import sqlite3
 from flask import Flask
 from flask import flash
@@ -12,6 +13,12 @@ app.secret_key = config.secret_key
 def require_login():
     if "user_id" not in session:
         abort(403)
+    
+def check_csrf():
+    if "csrf_token" not in request.form:
+        abort(403) 
+    if request.form["csrf_token"] != session["csrf_token"]:
+        abort(403) 
 
 @app.route("/")
 def index():
@@ -60,9 +67,10 @@ def edit_images(user_id):
     image= users.get_image(user_id)
     return render_template("images.html", user=target_user, image=image)
 
-@app.route("/add_image", methods=["GET", "POST"])
+@app.route("/add_image", methods=["POST"])
 def add_image():
     require_login()
+    check_csrf()
 
     current_user = users.get_user(session["user_id"])
     target_user_id = int(request.form["user_id"])
@@ -90,6 +98,7 @@ def add_image():
 @app.route("/remove_image", methods=["POST"])
 def remove_image():
     require_login()
+    check_csrf()
 
     current_user = users.get_user(session["user_id"])
     target_user_id = int(request.form["user_id"])
@@ -171,6 +180,8 @@ def new_item():
 @app.route("/book_training", methods=["POST"])
 def book_training():
     require_login()
+    check_csrf()
+
     item_id = request.form["item_id"]
     
     item = items.get_item(item_id)
@@ -190,6 +201,8 @@ def book_training():
 @app.route("/cancel_booking", methods=["POST"])
 def cancel_booking():
     require_login()
+    check_csrf()
+
     item_id = request.form["item_id"]
     item = items.get_item(item_id)
     if not item:
@@ -206,6 +219,8 @@ def cancel_booking():
 @app.route("/create_item", methods=["POST"])
 def create_item():
     require_login()
+    check_csrf()
+
     user_id = session["user_id"]
     user=users.get_user(user_id)
 
@@ -303,6 +318,8 @@ def edit_item(item_id):
 @app.route("/update_item", methods=["POST"])
 def update_item():
     require_login()
+    check_csrf()
+
     item_id = request.form["item_id"] #something what is different from create item function
     #requesting item id from html edit_item
     item=items.get_item(item_id)
@@ -384,6 +401,7 @@ def update_item():
 @app.route("/remove_item/<int:item_id>", methods=["GET", "POST"])
 def remove_item(item_id):
     require_login()
+    
     item=items.get_item(item_id)
     user_id = session["user_id"]
     user=users.get_user(user_id)
@@ -395,6 +413,7 @@ def remove_item(item_id):
     if request.method == "GET":
         return render_template( "remove_item.html", item=item, user=user)
     if request.method == "POST":
+        check_csrf()
         if "remove" in request.form:
     #If we press remove, then it does the following:
             items.remove_item(item_id)
@@ -460,6 +479,7 @@ def login():
             session["username"] = username
             role=user["role"]
             session["role"]=role
+            session["csrf_token"] = secrets.token_hex(16)
             return redirect("/")
         #redirecting to the main page afer login
         else:
