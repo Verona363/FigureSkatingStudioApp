@@ -14,7 +14,10 @@ def get_all_classes():
 
 
 
-def add_item(title, training_type, specialization, format, training_level, coach_id, training_date, training_time, training_description, user_id):
+def add_item(title, training_type, specialization, 
+            format, training_level, coach_id, 
+            training_date, training_time, training_description, 
+            user_id):
     sql = """INSERT INTO items
     (title, training_type, specialization, format, training_level, coach_id, training_date, training_time, training_description, user_id)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"""
@@ -58,11 +61,6 @@ def is_booked(item_id, user_id):
     """
     result = db.query(sql, [item_id, user_id])
     return len(result) > 0
-#“Is this user already booked for this training?”
-#Returns:
-#True → user is booked
-#False → user is not booked
-#LATER can write  return bool(db.query(sql, [item_id, user_id]))
 
 def get_bookings(user_id):
     sql=""" SELECT participants.item_id, items.title, 
@@ -107,46 +105,6 @@ def get_item(item_id):
     WHERE items.id=? """
     result= db.query(sql, [item_id])
     return result[0] if result else None
-#Explanation about roles, same table "users" used twice
-#    creator.id AS user_id,
-#    creator.username AS creator_name,
-
-    #  later I'm joining users as creator,
-    #  so creator.id originally was users.id
-    #  creator.username originally was users.username
-
-
-# example result from this query is
-#{
-#  "id": 10,
-#  "title": "Spins",
-#
-#  "user_id": 1,
-#  "creator_name": "main_coach",
-#
-#  "coach_id": 2,
-#  "coach_name": "anna"
-#}
-
-   
-    #db.query() returns a list of dictionaries, where:
-    #List = all rows returned by the SQL query
-    #Dictionary = one row (column → value)
-    #[row1_dict,
-    #row2_dict,
-    #row3_dict]
-    #results = db.query(sql, [item_id]) might return
-#    [
-#   {
-#        "id": 1,
-#        "title": "Python Basics",
-#        "username": "johndoe"
-#    } 
-#]
-#What [0] does: give me first row from the result list
-#{ "id": 1, "title": "Python Basics" }
-
-
 
 
 def update_item(item_id, title, training_type, specialization, format, training_level, coach_id, training_date, training_time, training_description):

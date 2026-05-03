@@ -421,14 +421,9 @@ def remove_item(item_id):
     if request.method == "POST":
         check_csrf()
         if "remove" in request.form:
-    #If we press remove, then it does the following:
             items.remove_item(item_id)
             return redirect("/")
-    #Remove is the name="remove" of the button
-    #under method post in the html file
-    #remove_item.html
-        else:
-            return redirect("/item/"+ str(item_id))
+        return redirect("/item/"+ str(item_id))
 
 @app.route("/register")
 def register():
@@ -465,7 +460,6 @@ def login():
         return redirect("/")
 
     if request.method == "GET":
-    #if we just came to this page
         return render_template("login.html", user=user)
 
     if request.method =="POST":

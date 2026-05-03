@@ -10,8 +10,8 @@ def check_login(username, password):
     sql = "SELECT id, password_hash FROM users WHERE username = ?"
     result = db.query(sql, [username])
     if not result:
-        return None 
-    # result looks like [{'id': 1, 'password_hash': '...'}]    
+        return None
+    # result looks like [{'id': 1, 'password_hash': '...'}]
     user_id=result[0]["id"]
     password_hash=result[0]["password_hash"]
     if check_password_hash(password_hash, password):
@@ -39,8 +39,8 @@ def get_image(user_id):
     result = db.query(sql, [user_id])
     return result[0]["image"] if result else None #👉 Returns: bytes
 
-#👉 db.query() returns a list of rows
-#Each row behaves like a dictionary.
+# db.query() returns a list of rows
+#Each row behaves like a dictionary
 
 
 
@@ -63,5 +63,4 @@ def get_items(user_id):
     FROM items
     WHERE coach_id=?
     ORDER BY id DESC"""
-    return db.query(sql, [user_id]) 
-
+    return db.query(sql, [user_id])
