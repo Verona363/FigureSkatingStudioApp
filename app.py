@@ -296,8 +296,8 @@ def create_item():
         training_description,
         user_id
     )
-
-    return redirect("/")
+    item_id = db.last_insert_id()
+    return redirect("/item/"+ str(item_id))
 
 @app.route("/edit_item/<int:item_id>")
 def edit_item(item_id):
