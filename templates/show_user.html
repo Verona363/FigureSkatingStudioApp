@@ -19,7 +19,9 @@
         {% endif %}
     {% endif %}
     <p>
-    <img src="/image/{{ user.id }}" style="width: 150px; height: 190px; object-fit: cover;" />    </p>
+    <img src="/image/{{ user.id }}" style="width: 150px;
+    height: 190px; object-fit: cover;" 
+    alt="User Profile Picture"/></p>
 {% if user.role in ["coach", "admin"] %}    <p>
         User has {{ items | count }} announcements.
     </p>

@@ -14,7 +14,9 @@
     <h3>Profile Picture</h3>
     <form action="/remove_image" method="post">
     <input type="hidden" name="user_id" value="{{ user.id }}">
-    <img src="/image/{{ user.id }}" style="width: 150px; height: 190px; object-fit: cover;" /></p>
+    <img src="/image/{{ user.id }}" style="width: 150px;
+    height: 190px; object-fit: cover;"
+    alt="User Profile Picture" /></p>
     <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
 
     <input type="submit" value="Remove" /> 
