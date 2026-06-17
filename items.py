@@ -14,12 +14,15 @@ def get_all_classes():
 
 
 
-def add_item(title, training_type, specialization, 
-            format, training_level, coach_id, 
-            training_date, training_time, training_description, 
+def add_item(title, training_type, specialization,
+            format, training_level, coach_id,
+            training_date, training_time, training_description,
             user_id):
     sql = """INSERT INTO items
-    (title, training_type, specialization, format, training_level, coach_id, training_date, training_time, training_description, user_id)
+    (title, training_type, specialization, format,
+    training_level, coach_id, training_date,
+    training_time, training_description, user_id)
+
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"""
     db.execute(sql, [
         title, training_type, specialization, format,
@@ -63,7 +66,7 @@ def is_booked(item_id, user_id):
     return len(result) > 0
 
 def get_bookings(user_id):
-    sql=""" SELECT participants.item_id, items.title, 
+    sql=""" SELECT participants.item_id, items.title,
     items.training_date, items.training_time, items.training_level,
     items.coach_id, users.username
     FROM participants, items, users
@@ -72,8 +75,9 @@ def get_bookings(user_id):
     return db.query(sql, [user_id])
 
 def get_items():
-    sql = """SELECT items.id, items.title, items.training_date, 
-    items.training_time, items.training_level, items.coach_id, users.username
+    sql = """SELECT items.id, items.title, items.training_date,
+    items.training_time, items.training_level,
+    items.coach_id, users.username
     FROM items, users
     WHERE items.coach_id=users.id
     ORDER BY items.id DESC"""
@@ -107,7 +111,10 @@ def get_item(item_id):
     return result[0] if result else None
 
 
-def update_item(item_id, title, training_type, specialization, format, training_level, coach_id, training_date, training_time, training_description):
+def update_item(item_id, title, training_type,
+                specialization, format, training_level, coach_id,
+                training_date, training_time,
+                training_description):
     sql = """UPDATE items SET title=?,
                         training_type=?,
                         specialization=?,
@@ -123,11 +130,13 @@ def update_item(item_id, title, training_type, specialization, format, training_
         training_description, item_id])
     #The db.execute function runs the query and replaces the ? placeholders
     # with the actual values passed in the list.
-    #The last value in the list is item_id, which tells the database which record to update.
+    #The last value in the list is item_id,
+    #which tells the database which record to update.
 
-    #The order of the values in the list for "db.execute "" must match the order of the ? placeholders in the SQL query exactly.
+    #The order of the values in the list for "db.execute ""
+    #must match the order of the ? placeholders in the SQL query exactly.
     #There is 1 ? placeholder in the WHERE clause → for the item_id.
-    
+
 def remove_item(item_id):
     sql="DELETE FROM participants WHERE item_id=?"
     db.execute(sql, [item_id])
@@ -159,4 +168,3 @@ def find_items(query):
     return db.query(sql, [like] * 9)
     # It creates a list that repeats the same value 9 times.
     #like=jumps
-

@@ -14,12 +14,12 @@ app.secret_key = config.secret_key
 def require_login():
     if "user_id" not in session:
         abort(403)
-    
+
 def check_csrf():
     if "csrf_token" not in request.form:
-        abort(403) 
+        abort(403)
     if request.form["csrf_token"] != session["csrf_token"]:
-        abort(403) 
+        abort(403)
 
 @app.template_filter()
 def show_lines(content):
@@ -35,7 +35,8 @@ def index():
     user=None
     if "user_id" in session:
         user = users.get_user(session["user_id"])
-    return render_template( "index.html", items=all_items, coaches=all_coaches, user=user)
+    return render_template("index.html", items=all_items,
+                            coaches=all_coaches, user=user)
     #should b added here loginhtml
 
 @app.route("/user/<int:user_id>")
@@ -43,11 +44,16 @@ def show_user(user_id):
     user = users.get_user(user_id)
     if not user:
         abort(404)
-    
+
     bookings=items.get_bookings(user_id)
     myitems=users.get_items(user_id)
     image= users.get_image(user_id)
-    return render_template("show_user.html", user=user, items=myitems, image=image, bookings=bookings)
+    return render_template(
+        "show_user.html",
+        user=user,
+        items=myitems,
+        image=image,
+        bookings=bookings)
 
 @app.route("/images/<int:user_id>")
 def edit_images(user_id):
@@ -70,7 +76,6 @@ def edit_images(user_id):
     else:
         if target_user["id"] != current_user["id"]:
             abort(403)
-    
     image= users.get_image(user_id)
     return render_template("images.html", user=target_user, image=image)
 
@@ -176,12 +181,13 @@ def show_item(item_id):
 @app.route("/new_item")
 def new_item():
     require_login()
-    classes = items.get_all_classes() 
+    classes = items.get_all_classes()
     coaches=users.get_coaches()
     user = users.get_user(session["user_id"])
     if user["role"] not in ("coach", "admin"):
         abort(403)
-    return render_template( "new_item.html", coaches=coaches, classes=classes, user=user)
+    return render_template( "new_item.html", coaches=coaches,
+                            classes=classes, user=user)
 
 
 @app.route("/book_training", methods=["POST"])
@@ -190,11 +196,9 @@ def book_training():
     check_csrf()
 
     item_id = request.form["item_id"]
-    
     item = items.get_item(item_id)
     if not item:
         abort(403)
-    
     user_id = session["user_id"]
     try:
         items.add_booking(item_id, user_id)
@@ -218,7 +222,7 @@ def cancel_booking():
         items.cancel_booking(item_id, user_id)
         flash("Booking is cancelled")
     except:
-        pass 
+        pass
 
     return redirect("/item/"+ str (item_id))
 
@@ -315,10 +319,9 @@ def edit_item(item_id):
         abort(404)
     if item["coach_id"] != session["user_id"] and user["role"] != "admin":
         abort(403)
-
-    
     coaches = users.get_coaches()
-    return render_template( "edit_item.html", item=item, coaches=coaches, user=user)
+    return render_template( "edit_item.html", item=item,
+                            coaches=coaches, user=user)
 
 
 @app.route("/update_item", methods=["POST"])
@@ -335,7 +338,7 @@ def update_item():
         abort(404)
     if item["coach_id"] != session["user_id"] and user["role"] != "admin":
         abort(403)
-    
+
     title = request.form["title"]
     if not title or len(title)>80:
         abort(403)
@@ -347,11 +350,9 @@ def update_item():
     for field in CLASS_FIELDS:
         value = request.form.get(field)
 
-        # 🔒 field must exist
         if value is None:
             abort(403)
 
-        # ✅ optional handling
         if value == "":
             if field in OPTIONAL_FIELDS:
                 validated_classes[field] = None
@@ -359,11 +360,9 @@ def update_item():
             else:
                 abort(403)
 
-        # 🔒 field name must be valid
         if field not in all_classes:
             abort(403)
 
-        # 🔒 value must be one of allowed options
         if value not in all_classes[field]:
             abort(403)
 
@@ -407,7 +406,7 @@ def update_item():
 @app.route("/remove_item/<int:item_id>", methods=["GET", "POST"])
 def remove_item(item_id):
     require_login()
-    
+
     item=items.get_item(item_id)
     user_id = session["user_id"]
     user=users.get_user(user_id)
@@ -415,7 +414,7 @@ def remove_item(item_id):
         abort(404)
     if item["coach_id"] != session["user_id"] and user["role"] != "admin":
         abort(403)
-        
+
     if request.method == "GET":
         return render_template( "remove_item.html", item=item, user=user)
     if request.method == "POST":
@@ -449,7 +448,7 @@ def create():
     except sqlite3.IntegrityError:
         flash("ERROR: username is already taken")
         return redirect("/register")
-    
+
     return redirect("/")
 
 
